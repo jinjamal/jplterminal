@@ -1,0 +1,162 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Jam's Terminal Database</title>
+<style>
+  body {
+    background-color: #253A4B;
+    color: white;
+    font-family: 'Courier New', Courier, monospace;
+    margin: 0; padding: 20px;
+  }
+  .terminal {
+    max-width: 800px;
+    margin: auto;
+  }
+  input[type="text"] {
+    width: 100%;
+    font-size: 1.2em;
+    padding: 10px;
+    background: #1b2a3a;
+    border: none;
+    color: #fff;
+    margin-bottom: 15px;
+    box-sizing: border-box;
+  }
+  .category-btns {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  .category-btns button {
+    background: none;
+    border: none;
+    color: #3399ff;
+    font-weight: bold;
+    cursor: pointer;
+    padding: 8px 16px;
+    border-radius: 4px;
+    transition: background 0.2s;
+  }
+  .category-btns button.active,
+  .category-btns button:hover {
+    background: #3399ff;
+    color: #253A4B;
+  }
+  details {
+    background: #1b2a3a;
+    border-radius: 4px;
+    margin-bottom: 10px;
+  }
+  details[open] > summary {
+    background: #3399ff;
+    color: #253A4B;
+  }
+  summary {
+    cursor: pointer;
+    padding: 10px 15px;
+    font-weight: bold;
+    list-style: none;
+    user-select: none;
+    outline: none;
+  }
+  ul {
+    margin: 0; padding: 0 20px 10px 20px;
+    list-style: none;
+    font-size: 0.95em;
+  }
+  li {
+    padding: 5px 0;
+    cursor: default;
+    border-bottom: 1px solid #2a4159;
+  }
+  li:last-child {
+    border-bottom: none;
+  }
+  li:hover {
+    background: #2a4159;
+  }
+  .description {
+    margin-top: 5px;
+    font-style: italic;
+    color: #a3c4ffcc;
+  }
+  @media (max-width: 500px) {
+    .category-btns button {
+      flex: 1 1 100%;
+      text-align: center;
+    }
+  }
+</style>
+</head>
+<body>
+<div class="terminal">
+  <input type="text" id="searchInput" placeholder="Search..." onkeyup="filterData()" />
+  <div class="category-btns">
+    <button class="active" data-category="All" onclick="switchCategory(event)">All</button>
+    <button data-category="Landmarks" onclick="switchCategory(event)">Landmarks</button>
+    <button data-category="Characters" onclick="switchCategory(event)">Characters</button>
+    <button data-category="Citizens" onclick="switchCategory(event)">Citizens</button>
+  </div>
+  <div id="output"></div>
+</div>
+<script>
+const data = {
+
+// FULL DATA INSERTED HERE IN NEXT STEP
+
+};
+
+let currentCategory = 'All';
+
+function switchCategory(event) {
+  const buttons = document.querySelectorAll('.category-btns button');
+  buttons.forEach(btn => btn.classList.remove('active'));
+  event.target.classList.add('active');
+  currentCategory = event.target.dataset.category;
+  renderData();
+}
+
+function filterData() {
+  renderData();
+}
+
+function renderData() {
+  const query = document.getElementById('searchInput').value.toLowerCase();
+  const container = document.getElementById('output');
+  let categories = Object.keys(data);
+  let content = '';
+
+  categories.forEach(cat => {
+    if (currentCategory !== 'All' && currentCategory !== cat) return;
+
+    const filteredItems = data[cat].filter(item =>
+      Object.values(item).some(val =>
+        String(val).toLowerCase().includes(query)
+      )
+    );
+
+    if (filteredItems.length > 0) {
+      content += `<details open><summary>${cat}</summary><ul>`;
+      filteredItems.forEach(item => {
+        content += `<li><strong>${item.name || item.alias}</strong>`;
+        if (item.description) {
+          content += `<div class="description">${item.description}</div>`;
+        }
+        content += '</li>';
+      });
+      content += '</ul></details>';
+    }
+  });
+
+  container.innerHTML = content || '<p>No results found.</p>';
+}
+
+renderData();
+</script>
+</body>
+</html>
