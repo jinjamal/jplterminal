@@ -7,7 +7,7 @@
 <style>
   body {
     background-color: #253A4B;
-    color: #fff;
+    color: white;
     font-family: 'Courier New', Courier, monospace;
     margin: 0; padding: 20px;
   }
@@ -22,8 +22,8 @@
     background: #1b2a3a;
     border: none;
     color: #fff;
+    margin-bottom: 15px;
     box-sizing: border-box;
-    margin-bottom: 10px;
   }
   .category-btns {
     display: flex;
@@ -46,7 +46,7 @@
     background: #3399ff;
     color: #253A4B;
   }
-  details.dropdown {
+  details {
     background: #1b2a3a;
     border-radius: 4px;
     margin-bottom: 10px;
@@ -93,145 +93,100 @@
 </style>
 </head>
 <body>
-<div class="terminal">
-  <input type="text" id="searchInput" placeholder="Search..." onkeyup="filterData()" />
-  <div class="category-btns">
-    <button class="active" data-category="All" onclick="switchCategory(event)">All</button>
-    <button data-category="Landmarks" onclick="switchCategory(event)">Landmarks</button>
-    <button data-category="Characters" onclick="switchCategory(event)">Characters</button>
-    <button data-category="Citizens" onclick="switchCategory(event)">Citizens</button>
+  <div class="terminal">
+    <input type="text" id="searchInput" placeholder="Search..." onkeyup="filterData()" />
+    <div class="category-btns">
+      <button class="active" data-category="All" onclick="switchCategory(event)">All</button>
+      <button data-category="Landmarks" onclick="switchCategory(event)">Landmarks</button>
+      <button data-category="Characters" onclick="switchCategory(event)">Characters</button>
+      <button data-category="Citizens" onclick="switchCategory(event)">Citizens</button>
+    </div>
+    <div id="output"></div>
   </div>
-  <div id="output"></div>
-</div>
+
 <script>
   const data = {
     Landmarks: [
-      { name: "Nulight (Prabha - Light)", resident: "Jam-Wise", description: "Serene village bathed in perpetual twilight, known for its bioluminescent flora and fauna. The village's centerpiece is the Lumina Tree, whose glowing branches light up the entire area.", symbol: "Firefly" },
-      { name: "Marja’s Eye (Chandra - Moon)", resident: "Hoodie-Jam", description: "Town with reflective lakes, tranquil atmosphere, perfect for stargazing.", symbol: "Cat" },
-      { name: "Surya Zero (Surya - Sun)", resident: "Prototype Zero", description: "Futuristic city powered by solar energy, home of Sunspire Tower.", symbol: "Dog" },
-      { name: "Again (Agni - Fire)", resident: "The Inventor", description: "Lab city where creativity and energy abound, center is Ignis Core.", symbol: "Fire Salamander" },
-      { name: "Bhalu’s Rest (Dhara - Earth)", resident: "Jamstone", description: "Village known for its stability and strength, surrounded by mountains.", symbol: "Bear" },
-      { name: "Airpota (Vayu - Wind)", resident: "AirJam", description: "Town characterized by swift winds and open skies.", symbol: "Swift" },
-      { name: "Apas Blue (Jala - Water)", resident: "Jamwave", description: "City known for its flowing rivers and adaptability.", symbol: "Dolphin" },
-      { name: "Pratu’s Dawn (Udaya - Dawn)", resident: "Jamstar", description: "Village representing new beginnings and hope.", symbol: "Sunbird" }
+      { name: "Nulight (Prabha - Light)", resident: "Jam-Wise", description: "A serene village bathed in perpetual twilight, known for its bioluminescent flora and fauna. The village's centerpiece is the Lumina Tree, whose glowing branches light up the entire area.", symbol: "Firefly" },
+      { name: "Marja’s Eye (Chandra - Moon)", resident: "Hoodie-Jam", description: "A town characterized by its reflective lakes and tranquil atmosphere. The night sky here is always clear, making it a perfect spot for stargazing. The town square features a large, mysterious mirror that locals believe holds the secrets of the moon.", symbol: "Cat" }
     ],
     Characters: [
-      { name: "Jam-Wise", associated: "Prabhasa (Light)", symbol: "Firefly", description: "Represents wisdom and enlightenment." },
-      { name: "Hoodie-Jam", associated: "Soma (Moon)", symbol: "Cat", description: "Reflects introspection and subtlety." },
-      { name: "Prototype Zero", associated: "Surya (Sun)", symbol: "Dog", description: "Symbolizes purity, power, and innocence." },
-      { name: "The Inventor", associated: "Anala (Fire)", symbol: "Fire Salamander", description: "Represents creativity, energy, and transformation." },
-      { name: "Jamstone", associated: "Dhara (Earth)", symbol: "Bear", description: "Symbolizes stability, strength, and grounding." },
-      { name: "AirJam", associated: "Anila (Wind)", symbol: "Swift", description: "Symbolizes freedom and agility." },
-      { name: "Jamwave", associated: "Apas (Water)", symbol: "Dolphin", description: "Symbolizes fluidity and depth." },
-      { name: "Jamstar", associated: "Pratyusha (Dawn)", symbol: "Sunbird", description: "Represents new beginnings and hope." }
+      { name: "Jam-Wise", category: "Light", description: "Represents wisdom and enlightenment, symbolized by a Firefly." },
+      { name: "Hoodie-Jam", category: "Moon", description: "Reflects introspection, emotion, and subtlety, symbolized by a Cat." }
     ],
     Citizens: [
-      { name: "Pijon Smith", role: "Hive Mind Pigeon", description: "Every pigeon on Jam's Planet combined, with a pink-haired human head and streetwear." },
-      { name: "Spoon", role: "3-year-old Cavoodle", description: "Jam's little dog, super chill and fluffy." },
-      { name: "Elaine", role: "Fiancé", description: "Jam's partner and home anchor." }
-      // Add more citizens if you want
+      { name: "Spoon", age: 3, species: "Cavoodle", owner: "Jam & Elaine" },
+      { name: "Elaine", role: "Fiancé", hobbies: "Supporting Jam" }
     ]
   };
 
-  let currentCategory = 'All';
+  let currentCategory = "All";
 
-  function createItemElement(item, type) {
-    const li = document.createElement('li');
-    let content = `<strong>${item.name}</strong>`;
-    if (type === 'Landmarks') {
-      content += ` — Resident: ${item.resident}<br><span class="description">${item.description}</span>`;
-    } else if (type === 'Characters') {
-      content += ` — Associated: ${item.associated}<br><span class="description">${item.description}</span>`;
-    } else if (type === 'Citizens') {
-      content += ` — Role: ${item.role || 'N/A'}<br><span class="description">${item.description}</span>`;
+  function createItemHTML(item, category) {
+    let extra = "";
+    if (category === "Landmarks") {
+      extra = `<div class="description">${item.description} <br><b>Resident:</b> ${item.resident} | <b>Symbol:</b> ${item.symbol}</div>`;
+    } else if (category === "Characters") {
+      extra = `<div class="description">${item.description} | <b>Category:</b> ${item.category}</div>`;
+    } else if (category === "Citizens") {
+      extra = `<div class="description">${Object.entries(item).filter(([k]) => k !== "name").map(([k,v]) => `<b>${k}:</b> ${v}`).join(" | ")}</div>`;
     }
-    li.innerHTML = content;
-    return li;
+    return `<li><strong>${item.name}</strong>${extra}</li>`;
   }
 
-  function renderCategory(category) {
-    const output = document.getElementById('output');
-    output.innerHTML = '';
+  function renderCategory(category, filter = "") {
+    const container = document.getElementById("output");
+    let content = "";
 
-    if (category === 'All') {
+    if (category === "All") {
       for (const cat in data) {
-        const details = document.createElement('details');
-        details.className = 'dropdown';
-        details.open = true;
-        const summary = document.createElement('summary');
-        summary.textContent = cat;
-        details.appendChild(summary);
-
-        const ul = document.createElement('ul');
-        data[cat].forEach(item => {
-          ul.appendChild(createItemElement(item, cat));
+        let filteredItems = data[cat].filter(item =>
+          item.name.toLowerCase().includes(filter.toLowerCase()) ||
+          (item.description && item.description.toLowerCase().includes(filter.toLowerCase())) ||
+          Object.values(item).some(v => typeof v === 'string' && v.toLowerCase().includes(filter.toLowerCase()))
+        );
+        if (filteredItems.length === 0) continue;
+        content += `<details open><summary>${cat}</summary><ul>`;
+        filteredItems.forEach(item => {
+          content += createItemHTML(item, cat);
         });
-        details.appendChild(ul);
-        output.appendChild(details);
+        content += "</ul></details>";
       }
     } else {
-      const details = document.createElement('details');
-      details.className = 'dropdown';
-      details.open = true;
-      const summary = document.createElement('summary');
-      summary.textContent = category;
-      details.appendChild(summary);
-
-      const ul = document.createElement('ul');
-      data[category].forEach(item => {
-        ul.appendChild(createItemElement(item, category));
-      });
-      details.appendChild(ul);
-      output.appendChild(details);
+      let filteredItems = data[category].filter(item =>
+        item.name.toLowerCase().includes(filter.toLowerCase()) ||
+        (item.description && item.description.toLowerCase().includes(filter.toLowerCase())) ||
+        Object.values(item).some(v => typeof v === 'string' && v.toLowerCase().includes(filter.toLowerCase()))
+      );
+      if (filteredItems.length === 0) {
+        content = `<p>No results found.</p>`;
+      } else {
+        content = `<details open><summary>${category}</summary><ul>`;
+        filteredItems.forEach(item => {
+          content += createItemHTML(item, category);
+        });
+        content += "</ul></details>";
+      }
     }
+
+    container.innerHTML = content;
   }
 
-  function switchCategory(e) {
-    currentCategory = e.target.getAttribute('data-category');
-    document.querySelectorAll('.category-btns button').forEach(btn => btn.classList.remove('active'));
-    e.target.classList.add('active');
-    document.getElementById('searchInput').value = '';
-    renderCategory(currentCategory);
+  function switchCategory(event) {
+    currentCategory = event.target.getAttribute("data-category");
+    document.querySelectorAll(".category-btns button").forEach(btn => btn.classList.remove("active"));
+    event.target.classList.add("active");
+    const filterVal = document.getElementById("searchInput").value;
+    renderCategory(currentCategory, filterVal);
   }
 
   function filterData() {
-    const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-    const output = document.getElementById('output');
-    output.innerHTML = '';
-
-    if (!searchTerm) {
-      renderCategory(currentCategory);
-      return;
-    }
-
-    // Search across all data, grouped by category
-    for (const cat in data) {
-      const filteredItems = data[cat].filter(item => {
-        return Object.values(item).some(val => 
-          val && val.toString().toLowerCase().includes(searchTerm)
-        );
-      });
-
-      if (filteredItems.length) {
-        const details = document.createElement('details');
-        details.className = 'dropdown';
-        details.open = true;
-        const summary = document.createElement('summary');
-        summary.textContent = cat;
-        details.appendChild(summary);
-
-        const ul = document.createElement('ul');
-        filteredItems.forEach(item => {
-          ul.appendChild(createItemElement(item, cat));
-        });
-        details.appendChild(ul);
-        output.appendChild(details);
-      }
-    }
+    const filterVal = document.getElementById("searchInput").value;
+    renderCategory(currentCategory, filterVal);
   }
 
   // Initial render
-  renderCategory('All');
+  renderCategory("All");
 </script>
 </body>
 </html>
