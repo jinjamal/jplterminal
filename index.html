@@ -1,163 +1,254 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Jam's Terminal Database</title>
+  <title>Jam's Planet Database</title>
   <style>
     body {
       background-color: #253A4B;
-      color: white;
+      color: #ffffff;
       font-family: 'Courier New', Courier, monospace;
       padding: 20px;
     }
-    .terminal {
+
+    .glow {
+      text-shadow: 0 0 4px rgba(255,255,255,0.6);
+    }
+
+    .container {
       max-width: 800px;
       margin: 0 auto;
     }
-    .input-area {
-      margin-bottom: 20px;
-    }
-    .input-area input {
+
+    input {
       width: 100%;
-      padding: 10px;
-      font-size: 1em;
-      background-color: #1d2f3a;
-      color: white;
+      padding: 12px;
+      font-size: 16px;
+      margin-bottom: 20px;
+      background-color: #1b2d3a;
+      color: #fff;
       border: none;
-      border-bottom: 2px solid white;
+      border-radius: 4px;
+      outline: none;
     }
+
     .buttons {
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
       margin-bottom: 20px;
     }
+
     .buttons button {
-      flex: 1 1 auto;
+      flex: 1;
       padding: 10px;
-      background-color: #1d2f3a;
-      color: white;
-      border: 2px solid white;
+      background-color: #1b2d3a;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      font-size: 14px;
       cursor: pointer;
     }
-    .buttons button:hover {
-      background-color: #345065;
+
+    .buttons button.active {
+      background-color: #3578c6;
     }
-    #output div {
+
+    .entry {
       margin-bottom: 20px;
+      background-color: rgba(255,255,255,0.05);
+      padding: 15px;
+      border-radius: 6px;
+    }
+
+    .entry h3 {
+      margin: 0 0 10px;
+      font-size: 18px;
+    }
+
+    .entry p {
+      margin: 5px 0;
+      font-size: 15px;
     }
   </style>
 </head>
 <body>
-  <div class="terminal">
-    <div class="input-area">
-      <input type="text" id="searchInput" placeholder="Type to search..." onkeyup="filterData()" />
-    </div>
+  <div class="container">
+    <input id="searchInput" type="text" placeholder="Search Jam's Planet..." onkeyup="filterData()" />
     <div class="buttons">
-      <button onclick="switchView('all')">All</button>
+      <button onclick="switchView('all')" class="active">All</button>
       <button onclick="switchView('landmarks')">Landmarks</button>
       <button onclick="switchView('characters')">Characters</button>
-      <button onclick="switchView('citizens')">Citizens</button>
     </div>
     <div id="output"></div>
   </div>
-
   <script>
     const data = {
       landmarks: [
         {
-          name: "Nulight (Prabha - Light)",
+          name: "Nulight",
+          region: "Prabha - Light",
           resident: "Jam-Wise",
-          description: "A serene village bathed in perpetual twilight, known for its bioluminescent flora and fauna.",
+          description: "A serene village bathed in perpetual twilight, known for its bioluminescent flora and fauna. The village's centerpiece is the Lumina Tree, whose glowing branches light up the entire area.",
           symbol: "Firefly"
+        },
+        {
+          name: "Marja’s Eye",
+          region: "Chandra - Moon",
+          resident: "Hoodie-Jam",
+          description: "A town characterized by its reflective lakes and tranquil atmosphere. The night sky here is always clear, making it a perfect spot for stargazing.",
+          symbol: "Cat"
+        },
+        {
+          name: "Surya Zero",
+          region: "Surya - Sun",
+          resident: "Prototype Zero",
+          description: "A bustling city that never sleeps, powered by solar energy. The Sunspire Tower is a beacon of innovation and purity.",
+          symbol: "Dog"
+        },
+        {
+          name: "Again",
+          region: "Agni - Fire",
+          resident: "The Inventor",
+          description: "A vibrant lab city where flames and sparks dance. The Ignis Core lab is the epicenter of creativity and invention.",
+          symbol: "Fire Salamander"
+        },
+        {
+          name: "Bhalu’s Rest",
+          region: "Dhara - Earth",
+          resident: "Jamstone",
+          description: "A peaceful village nestled in a dense forest. The Great Bear Rock stands as a guardian over the village.",
+          symbol: "Bear"
+        },
+        {
+          name: "Airpota",
+          region: "Vayu - Wind",
+          resident: "AirJam",
+          description: "A floating town among the clouds, connected by platforms and bridges. The Windward Tower provides epic sky views.",
+          symbol: "Swift"
+        },
+        {
+          name: "Apas Blue",
+          region: "Jala - Water",
+          resident: "Jamwave",
+          description: "A city on and under water with domed structures and canals. The Deep Blue Dome is the cultural heart.",
+          symbol: "Dolphin"
+        },
+        {
+          name: "Pratu’s Dawn",
+          region: "Udaya - Dawn",
+          resident: "Jamstar",
+          description: "A village of endless sunrises, symbolizing hope and renewal. The Dawnspire monument captures first light daily.",
+          symbol: "Sunbird"
         }
       ],
       characters: [
         {
           name: "Jam-Wise",
-          description: "The enlightened guide of Nulight.",
-          symbol: "Firefly"
-        }
-      ],
-      citizens: [
+          region: "Prabhasa - Light",
+          animal: "Firefly",
+          role: "Represents wisdom and enlightenment.",
+          ability: "Can illuminate dark areas and bring clarity to confusing situations."
+        },
         {
-          name: "Citizen 1",
-          description: "A helpful villager from Nulight."
+          name: "Hoodie-Jam",
+          region: "Soma - Moon",
+          animal: "Cat",
+          role: "Reflects introspection, emotion, and subtlety.",
+          ability: "Can become nearly invisible and see in total darkness."
+        },
+        {
+          name: "Prototype Zero",
+          region: "Surya - Sun",
+          animal: "Dog",
+          role: "Symbolizes purity, power, and innocence.",
+          ability: "Radiates warmth and energy, capable of healing and rejuvenation."
+        },
+        {
+          name: "The Inventor",
+          region: "Anala - Fire",
+          animal: "Fire Salamander",
+          role: "Embodies creativity, energy, and transformation.",
+          ability: "Can manipulate fire and create innovative solutions from nothing."
+        },
+        {
+          name: "Jamstone",
+          region: "Dhara - Earth",
+          animal: "Bear",
+          role: "Represents stability, strength, and grounding.",
+          ability: "Possesses immense strength and controls earth and stone."
+        },
+        {
+          name: "AirJam",
+          region: "Anila - Wind",
+          animal: "Swift",
+          role: "Symbolizes freedom, agility, and swiftness.",
+          ability: "Can fly and manipulate wind currents."
+        },
+        {
+          name: "Jamwave",
+          region: "Apas - Water",
+          animal: "Dolphin",
+          role: "Represents fluidity, adaptability, and depth.",
+          ability: "Can breathe underwater and control water movements."
+        },
+        {
+          name: "Jamstar",
+          region: "Pratyusha - Dawn",
+          animal: "Sunbird",
+          role: "Symbolizes new beginnings, hope, and brilliance.",
+          ability: "Can inspire and energize others with the light of dawn."
         }
       ]
     };
 
     let currentView = 'all';
 
-    function renderData(view = 'all') {
-      const container = document.getElementById('output');
-      container.innerHTML = '';
-      let items = [];
-
-      if (view === 'landmarks') items = data.landmarks;
-      else if (view === 'characters') items = data.characters;
-      else if (view === 'citizens') items = data.citizens;
-      else items = [...data.landmarks, ...data.characters, ...data.citizens];
-
-      if (items.length === 0) {
-        container.innerHTML = '<p>No results found.</p>';
-        return;
-      }
-
-      items.forEach(item => {
-        const div = document.createElement('div');
-        div.innerHTML = `
-          <strong>${item.name}</strong><br/>
-          ${item.resident ? 'Resident: ' + item.resident + '<br/>' : ''}
-          ${item.description ? '<em>' + item.description + '</em><br/>' : ''}
-          ${item.symbol ? 'Symbol: ' + item.symbol + '<br/>' : ''}
-        `;
-        container.appendChild(div);
-      });
-    }
-
     function switchView(view) {
       currentView = view;
-      renderData(view);
+      document.querySelectorAll(".buttons button").forEach(btn => btn.classList.remove("active"));
+      event.target.classList.add("active");
+      filterData();
     }
 
     function filterData() {
-      const term = document.getElementById('searchInput').value.toLowerCase();
-      const container = document.getElementById('output');
+      const query = document.getElementById("searchInput").value.toLowerCase();
       let items = [];
 
-      if (currentView === 'landmarks') items = data.landmarks;
-      else if (currentView === 'characters') items = data.characters;
-      else if (currentView === 'citizens') items = data.citizens;
-      else items = [...data.landmarks, ...data.characters, ...data.citizens];
-
-      const filtered = items.filter(item =>
-        Object.values(item).some(val =>
-          typeof val === 'string' && val.toLowerCase().includes(term)
-        )
-      );
-
-      container.innerHTML = '';
-      if (filtered.length === 0) {
-        container.innerHTML = '<p>No results found.</p>';
-      } else {
-        filtered.forEach(item => {
-          const div = document.createElement('div');
-          div.innerHTML = `
-            <strong>${item.name}</strong><br/>
-            ${item.resident ? 'Resident: ' + item.resident + '<br/>' : ''}
-            ${item.description ? '<em>' + item.description + '</em><br/>' : ''}
-            ${item.symbol ? 'Symbol: ' + item.symbol + '<br/>' : ''}
-          `;
-          container.appendChild(div);
-        });
+      if (currentView === 'landmarks' || currentView === 'all') {
+        items = items.concat(data.landmarks
+          .filter(item => Object.values(item).some(val => val.toLowerCase().includes(query)))
+          .map(item => `
+            <div class="entry glow">
+              <h3>${item.name}</h3>
+              <p><strong>Region:</strong> ${item.region}</p>
+              <p><strong>Resident:</strong> ${item.resident}</p>
+              <p><strong>Description:</strong> ${item.description}</p>
+              <p><strong>Symbol:</strong> ${item.symbol}</p>
+            </div>
+          `));
       }
+
+      if (currentView === 'characters' || currentView === 'all') {
+        items = items.concat(data.characters
+          .filter(item => Object.values(item).some(val => val.toLowerCase().includes(query)))
+          .map(item => `
+            <div class="entry glow">
+              <h3>${item.name}</h3>
+              <p><strong>Region:</strong> ${item.region}</p>
+              <p><strong>Animal:</strong> ${item.animal}</p>
+              <p><strong>Role:</strong> ${item.role}</p>
+              <p><strong>Ability:</strong> ${item.ability}</p>
+            </div>
+          `));
+      }
+
+      const container = document.getElementById("output");
+      container.innerHTML = items.length ? items.join('') : '<p class="glow">No results found.</p>';
     }
 
-    // Initial load
-    window.onload = () => renderData();
+    window.onload = filterData;
   </script>
 </body>
 </html>
