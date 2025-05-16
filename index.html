@@ -78,7 +78,7 @@
       <input type="text" id="searchInput" placeholder="Type to search..." onkeyup="filterData()" />
     </div>
     <div class="buttons">
-      <button onclick="switchView('landmarks')">landmarks</button>
+      <button onclick="switchView('Landmarks')">Landmarks</button>
       <button onclick="switchView('jams')">The 8 JAMs</button>
       <button onclick="switchView('citizens')">Citizens</button>
     </div>
@@ -86,7 +86,7 @@
   </div>
   <script>
     const data = {
-      landmarks: [
+      Landmarks: [
         { name: "Nulight (Prabha - Light)", resident: "Jam-Wise", description: "A serene village bathed in perpetual twilight, known for its bioluminescent flora and fauna. The village's centerpiece is the Lumina Tree, whose glowing branches light up the entire area.", symbol: "Firefly" },
         { name: "Marja’s Eye (Chandra - Moon)", resident: "Hoodie-Jam", description: "A town characterized by its reflective lakes and tranquil atmosphere. The night sky here is always clear, making it a perfect spot for stargazing. The town square features a large, mysterious mirror that locals believe holds the secrets of the moon.", symbol: "Cat" },
         { name: "Surya Zero (Surya - Sun)", resident: "Prototype Zero", description: "A bustling city that never sleeps, powered by solar energy. The architecture is futuristic, with sleek, reflective surfaces that shimmer in the sunlight. The Sunspire Tower in the city's center is a beacon of innovation and purity.", symbol: "Dog" },
@@ -111,12 +111,12 @@
       })
     };
 
-    let currentView = 'landmarks';
+    let currentView = 'Landmarks';
 
     function switchView(view) {
       currentView = view;
       document.querySelectorAll('.buttons button').forEach(btn => btn.classList.remove('active'));
-      const index = ['landmarks', 'jams', 'citizens'].indexOf(view);
+      const index = ['Landmarks', 'jams', 'citizens'].indexOf(view);
       document.querySelectorAll('.buttons button')[index].classList.add('active');
       filterData();
     }
@@ -135,7 +135,7 @@
       items.forEach(item => {
         const div = document.createElement('div');
         div.className = 'entry';
-        if (currentView === 'landmarks') {
+        if (currentView === 'Landmarks') {
           div.innerHTML = `<p><strong>Name:</strong> ${item.name}</p>
                            <p><strong>Resident:</strong> ${item.resident}</p>
                            <p><strong>Description:</strong> ${item.description}</p>
@@ -154,7 +154,7 @@
       });
     }
 
-    window.onload = () => switchView('landmarks');
+    window.onload = () => switchView('Landmarks');
   </script>
 </body>
 </html>
