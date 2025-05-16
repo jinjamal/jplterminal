@@ -1,0 +1,163 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Jam's Terminal Database</title>
+  <style>
+    body {
+      background-color: #253A4B;
+      color: white;
+      font-family: 'Courier New', Courier, monospace;
+      padding: 20px;
+    }
+    .terminal {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .input-area {
+      margin-bottom: 20px;
+    }
+    .input-area input {
+      width: 100%;
+      padding: 10px;
+      font-size: 1em;
+      background-color: #1d2f3a;
+      color: white;
+      border: none;
+      border-bottom: 2px solid white;
+    }
+    .buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .buttons button {
+      flex: 1 1 auto;
+      padding: 10px;
+      background-color: #1d2f3a;
+      color: white;
+      border: 2px solid white;
+      cursor: pointer;
+    }
+    .buttons button:hover {
+      background-color: #345065;
+    }
+    #output div {
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="terminal">
+    <div class="input-area">
+      <input type="text" id="searchInput" placeholder="Type to search..." onkeyup="filterData()" />
+    </div>
+    <div class="buttons">
+      <button onclick="switchView('all')">All</button>
+      <button onclick="switchView('landmarks')">Landmarks</button>
+      <button onclick="switchView('characters')">Characters</button>
+      <button onclick="switchView('citizens')">Citizens</button>
+    </div>
+    <div id="output"></div>
+  </div>
+
+  <script>
+    const data = {
+      landmarks: [
+        {
+          name: "Nulight (Prabha - Light)",
+          resident: "Jam-Wise",
+          description: "A serene village bathed in perpetual twilight, known for its bioluminescent flora and fauna.",
+          symbol: "Firefly"
+        }
+      ],
+      characters: [
+        {
+          name: "Jam-Wise",
+          description: "The enlightened guide of Nulight.",
+          symbol: "Firefly"
+        }
+      ],
+      citizens: [
+        {
+          name: "Citizen 1",
+          description: "A helpful villager from Nulight."
+        }
+      ]
+    };
+
+    let currentView = 'all';
+
+    function renderData(view = 'all') {
+      const container = document.getElementById('output');
+      container.innerHTML = '';
+      let items = [];
+
+      if (view === 'landmarks') items = data.landmarks;
+      else if (view === 'characters') items = data.characters;
+      else if (view === 'citizens') items = data.citizens;
+      else items = [...data.landmarks, ...data.characters, ...data.citizens];
+
+      if (items.length === 0) {
+        container.innerHTML = '<p>No results found.</p>';
+        return;
+      }
+
+      items.forEach(item => {
+        const div = document.createElement('div');
+        div.innerHTML = `
+          <strong>${item.name}</strong><br/>
+          ${item.resident ? 'Resident: ' + item.resident + '<br/>' : ''}
+          ${item.description ? '<em>' + item.description + '</em><br/>' : ''}
+          ${item.symbol ? 'Symbol: ' + item.symbol + '<br/>' : ''}
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function switchView(view) {
+      currentView = view;
+      renderData(view);
+    }
+
+    function filterData() {
+      const term = document.getElementById('searchInput').value.toLowerCase();
+      const container = document.getElementById('output');
+      let items = [];
+
+      if (currentView === 'landmarks') items = data.landmarks;
+      else if (currentView === 'characters') items = data.characters;
+      else if (currentView === 'citizens') items = data.citizens;
+      else items = [...data.landmarks, ...data.characters, ...data.citizens];
+
+      const filtered = items.filter(item =>
+        Object.values(item).some(val =>
+          typeof val === 'string' && val.toLowerCase().includes(term)
+        )
+      );
+
+      container.innerHTML = '';
+      if (filtered.length === 0) {
+        container.innerHTML = '<p>No results found.</p>';
+      } else {
+        filtered.forEach(item => {
+          const div = document.createElement('div');
+          div.innerHTML = `
+            <strong>${item.name}</strong><br/>
+            ${item.resident ? 'Resident: ' + item.resident + '<br/>' : ''}
+            ${item.description ? '<em>' + item.description + '</em><br/>' : ''}
+            ${item.symbol ? 'Symbol: ' + item.symbol + '<br/>' : ''}
+          `;
+          container.appendChild(div);
+        });
+      }
+    }
+
+    // Initial load
+    window.onload = () => renderData();
+  </script>
+</body>
+</html>
