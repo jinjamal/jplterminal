@@ -1,179 +1,362 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>JAM’s Planet — Text Menu</title>
-  <style>
-    body {
-      background: #121212;
-      color: #f0f0f0;
-      font-family: 'Courier New', Courier, monospace;
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      padding: 40px 0;
-      margin: 0;
-      min-height: 100vh;
-    }
-    #container {
-      border: 2px solid #f0f0f0;
-      padding: 20px 40px;
-      max-width: 400px;
-      user-select: none;
-      text-align: center;
-    }
-    /* Entry button */
-    #entry {
-      cursor: pointer;
-      padding: 15px 0;
-      font-size: 1.3em;
-      border: 2px solid #f0f0f0;
-      transition: background 0.2s;
-      margin-bottom: 0;
-    }
-    #entry:hover {
-      background: #282828;
-    }
-
-    /* Category menu */
-    #category-menu {
-      display: none;
-      margin-top: 20px;
-    }
-    .option {
-      padding: 10px 0;
-      cursor: pointer;
-      border-bottom: 1px solid #444;
-      transition: color 0.2s;
-    }
-    .option:last-child {
-      border-bottom: none;
-    }
-    .option:hover {
-      color: #ffd700; /* gold sparkle */
-    }
-
-    /* List & details */
-    #list {
-      margin-top: 20px;
-      max-height: 200px;
-      overflow-y: auto;
-      border-top: 1px solid #444;
-      text-align: left;
-      display: none;
-    }
-    .list-item {
-      padding: 8px 10px;
-      cursor: pointer;
-      border-bottom: 1px solid #333;
-      transition: color 0.2s;
-    }
-    .list-item:last-child {
-      border-bottom: none;
-    }
-    .list-item:hover {
-      color: #4caf50; /* nice green */
-    }
-    #details {
-      margin-top: 20px;
-      background: #222;
-      padding: 15px;
-      min-height: 100px;
-      white-space: pre-wrap;
-      border-radius: 4px;
-      font-size: 14px;
-      line-height: 1.4;
-      display: none;
-      text-align: left;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>JAM’s Planet — Text RPG Menu</title>
+<style>
+  body {
+    background: #121212;
+    color: #f0f0f0;
+    font-family: 'Courier New', Courier, monospace;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 40px 0;
+    margin: 0;
+    min-height: 100vh;
+  }
+  #container {
+    border: 2px solid #f0f0f0;
+    padding: 20px 40px;
+    max-width: 480px;
+    user-select: none;
+    text-align: center;
+  }
+  #entry {
+    cursor: pointer;
+    padding: 15px 0;
+    font-size: 1.3em;
+    border: 2px solid #f0f0f0;
+    transition: background 0.2s;
+    margin-bottom: 0;
+  }
+  #entry:hover {
+    background: #282828;
+  }
+  #category-menu {
+    display: none;
+    margin-top: 20px;
+  }
+  .option {
+    padding: 10px 0;
+    cursor: pointer;
+    border-bottom: 1px solid #444;
+    transition: color 0.2s;
+  }
+  .option:last-child {
+    border-bottom: none;
+  }
+  .option:hover {
+    color: #ffd700;
+  }
+  #list {
+    margin-top: 20px;
+    max-height: 250px;
+    overflow-y: auto;
+    border-top: 1px solid #444;
+    text-align: left;
+    display: none;
+    padding-left: 10px;
+  }
+  .list-item {
+    padding: 8px 10px;
+    cursor: pointer;
+    border-bottom: 1px solid #333;
+    transition: color 0.2s;
+  }
+  .list-item:last-child {
+    border-bottom: none;
+  }
+  .list-item:hover {
+    color: #4caf50;
+  }
+  #details {
+    margin-top: 20px;
+    background: #222;
+    padding: 15px;
+    min-height: 140px;
+    white-space: pre-wrap;
+    border-radius: 4px;
+    font-size: 14px;
+    line-height: 1.4;
+    display: none;
+    text-align: left;
+  }
+  .symbol, .animal {
+    font-weight: bold;
+    color: #ffd700;
+  }
+</style>
 </head>
 <body>
   <div id="container">
     <div id="entry">Enter JAM’s Planet</div>
-
     <div id="category-menu">
       <div class="option" data-category="landmarks">Landmarks</div>
       <div class="option" data-category="characters">Characters</div>
       <div class="option" data-category="citizens">Citizens</div>
     </div>
-
     <div id="list"></div>
     <div id="details">Select an item to see details here...</div>
   </div>
+<script>
+  const entry = document.getElem
+      {
+        name: "Nulight (Prabha - Light)",
+        resident: "Jam-Wise",
+        description:
+          "A serene village bathed in perpetual twilight, known for its bioluminescent flora and fauna. The village's centerpiece is the Lumina Tree, whose glowing branches light up the entire area.",
+        symbol: "Firefly"
+      },
+      {
+        name: "Marja’s Eye (Chandra - Moon)",
+        resident: "Hoodie-Jam",
+        description:
+          "A town characterized by its reflective lakes and tranquil atmosphere. The night sky here is always clear, making it a perfect spot for stargazing. The town square features a large, mysterious mirror that locals believe holds the secrets of the moon.",
+        symbol: "Cat"
+      },
+      {
+        name: "Surya Zero (Surya - Sun)",
+        resident: "Prototype Zero",
+        description:
+          "A bustling city that never sleeps, powered by solar energy. The architecture is futuristic, with sleek, reflective surfaces that shimmer in the sunlight. The Sunspire Tower in the city's center is a beacon of innovation and purity.",
+        symbol: "Dog"
+      },
+      {
+        name: "Again (Agni - Fire)",
+        resident: "The Inventor",
+        description:
+          "A vibrant lab city where creativity and energy abound. Flames and sparks can be seen dancing around the various inventions and gadgets created here. The central lab, Ignis Core, is a hub of ceaseless innovation.",
+        symbol: "Fire Salamander"
+      },
+      {
+        name: "Bhalu’s Rest (Dhara - Earth)",
+        resident: "Jamstone",
+        description:
+          "A peaceful village nestled in the heart of a dense forest. The village is known for its strong, ancient trees and earthy, grounding energy. The Great Bear Rock stands as a guardian over the village.",
+        symbol: "Bear"
+      },
+      {
+        name: "Airpota (Vayu - Wind)",
+        resident: "AirJam",
+        description:
+          "A town that floats among the clouds, constantly moving with the wind. The structures are light and airy, with many platforms and bridges connecting different parts of the town. The Windward Tower provides stunning views of the surrounding skies.",
+        symbol: "Swift"
+      },
+      {
+        name: "Apas Blue (Jala - Water)",
+        resident: "Jamwave",
+        description:
+          "A city built on and under water, with domed structures and canals connecting various districts. The water here is crystal clear, allowing for vibrant underwater life to be seen from above. The Deep Blue Dome is the cultural heart of the city.",
+        symbol: "Dolphin"
+      },
+      {
+        name: "Pratu’s Dawn (Udaya - Dawn)",
+        resident: "Jamstar",
+        description:
+          "A village where every day begins with a breathtaking sunrise. The community is focused on renewal and hope, with many gardens and open spaces. The Dawnspire monument captures the first light of the day, symbolizing new beginnings.",
+        symbol: "Sunbird"
+      }
+    ],
+    characters: [
+      {
+        name: "Jam-Wise (Prabhasa - Light)",
+        animal: "Firefly",
+        role: "Represents wisdom and enlightenment.",
+        abilities:
+          "Can illuminate dark areas and bring clarity to confusing situations."
+      },
+      {
+        name: "Hoodie-Jam (Soma - Moon)",
+        animal: "Cat",
+        role: "Reflects introspection, emotion, and subtlety.",
+        abilities:
+          "Can become nearly invisible and see in total darkness."
+      },
+      {
+        name: "Prototype Zero (Surya - Sun)",
+        animal: "Dog",
+        role: "Symbolizes purity, power, and innocence.",
+        abilities:
+          "Radiates warmth and energy, capable of healing and rejuvenation."
+      },
+      {
+        name: "The Inventor (Anala - Fire)",
+        animal: "Fire Salamander",
+        role: "Embodies creativity, energy, and transformation.",
+        abilities:
+          "Can manipulate fire and create innovative solutions from seemingly nothing."
+      },
+      {
+        name: "Jamstone (Dhara - Earth)",
+        animal: "Bear",
+        role: "Represents stability, strength, and grounding.",
+        abilities:
+          "Possesses immense strength and the ability to control earth and stone."
+      },
+      {
+        name: "AirJam (Anila - Wind)",
+        animal: "Swift",
+        role: "Symbolizes freedom, agility, and swiftness.",
+        abilities:
+          "Can fly and manipulate wind currents."
+      },
+      {
+        name: "Jamwave (Apas - Water)",
+        animal: "Dolphin",
+        role: "Represents fluidity, adaptability, and depth.",
+        abilities:
+          "Can breathe underwater and control water movements."
+      },
+      {
+        name: "Jamstar (Pratyusha - Dawn)",
+        animal: "Sunbird",
+        role: "Symbolizes new beginnings, hope, and brilliance.",
+        abilities:
+          "Brings warmth and light, inspiring those around with a fresh start."
+      }
+    ],
+    citizens: [
+      {
+        name: "Jam-Wise",
+        role: "Resident of Nulight",
+        description:
+          "A wise figure glowing with bioluminescent knowledge, guiding the village with light and clarity."
+      },
+      {
+        name: "Hoodie-Jam",
+        role: "Resident of Marja’s Eye",
+        description:
+          "A mysterious and introspective soul, blending into shadows and moonlight."
+      },
+      {
+        name: "Prototype Zero",
+        role: "Resident of Surya Zero",
+        description:
+          "A lively, energetic presence, radiating warmth and innovation across the city."
+      },
+      {
+        name: "The Inventor",
+        role: "Resident of Again",
+        description:
+          "A creative mastermind always surrounded by sparks and new inventions."
+      },
+      {
+        name: "Jamstone",
+        role: "Resident of Bhalu’s Rest",
+        description:
+          "A grounding force, strong and steady as the ancient trees surrounding the village."
+      },
+      {
+        name: "AirJam",
+        role: "Resident of Airpota",
+        description:
+          "A swift and free spirit soaring through the floating platforms and skies."
+      },
+      {
+        name: "Jamwave",
+        role: "Resident of Apas Blue",
+        description:
+          "A fluid, adaptable citizen navigating both above and beneath the shimmering waters."
+      },
+      {
+        name: "Jamstar",
+        role: "Resident of Pratu’s Dawn",
+        description:
+          "A beacon of hope and new beginnings, greeting each day with radiant optimism."
+      }
+    ]
+  };
+  // DOM references
+  const menuDiv = document.getElementById("menu");
+  const detailDiv = document.getElementById("details");
 
-  <script>
-    const entry = document.getElementById('entry');
-    const categoryMenu = document.getElementById('category-menu');
-    const list = document.getElementById('list');
-    const details = document.getElementById('details');
+  // Render list items for chosen category
+  function renderList(category) {
+    detailDiv.innerHTML = ""; // Clear details on new category click
+    menuDiv.innerHTML = "";
 
-    // Our data for JAM's Planet
-    const data = {
-      landmarks: [
-        { name: "Nulight", description: "Jam-Wise's Village, bathed in eternal light and wisdom." },
-        { name: "Marja’s Eye", description: "Hoodie-Jam's Town under the moon’s watchful gaze." },
-        { name: "Surya Zero", description: "Prototype Zero's City shining with pure sunlight energy." },
-        { name: "Again", description: "The Inventor's Lab, where flames of creativity burn bright." },
-        { name: "Bhalu’s Rest", description: "Jamstone's Earth village, a place of strength and calm." },
-        { name: "Airpota", description: "Anila's windy town full of swift movement and freedom." },
-        { name: "Apas Blue", description: "Jamwave's watery city, flowing with deep emotion." },
-        { name: "Pratu’s Dawn", description: "Jamstar's village where new beginnings are born." }
-      ],
-      characters: [
-        { name: "Jam-Wise", description: "Associated with Prabhasa (Light), symbolizing wisdom and enlightenment. Firefly spirit." },
-        { name: "Hoodie-Jam", description: "Moon-associated, introspective, like a mysterious cat prowling in the night." },
-        { name: "Prototype Zero", description: "Sun symbol, purity and power embodied by a loyal dog." },
-        { name: "The Inventor", description: "Creative fire salamander, constantly transforming ideas into reality." },
-        { name: "Jamstone", description: "Strong and grounded like a bear, connected to the earth." },
-        { name: "AirJam", description: "Swift and free like the wind, agile and light." },
-        { name: "Jamwave", description: "Flowing and deep, like water and dolphins." },
-        { name: "Jamstar", description: "Dawn's hope and brilliance, a radiant sunbird." }
-      ],
-      citizens: [
-        { name: "Pijon Smith", description: "The hive mind pigeon of JAM's Planet, a streetwise character with pink hair and a mask." }
-      ]
-    };
+    let listData = [];
 
-    // On click of Enter JAM's Planet
-    entry.addEventListener('click', () => {
-      entry.style.display = 'none';
-      categoryMenu.style.display = 'block';
-      list.style.display = 'none';
-      details.style.display = 'none';
-    });
+    if (category === "landmarks") listData = jamData.landmarks;
+    else if (category === "characters") listData = jamData.characters;
+    else if (category === "citizens") listData = jamData.citizens;
 
-    // Click category to show list
-    categoryMenu.addEventListener('click', (e) => {
-      if (!e.target.classList.contains('option')) return;
-
-      const category = e.target.getAttribute('data-category');
-      const items = data[category];
-
-      // Clear previous list & details
-      list.innerHTML = '';
-      details.innerText = 'Select an item to see details here...';
-      details.style.display = 'none';
-
-      // Build list items
-      items.forEach(item => {
-        const div = document.createElement('div');
-        div.className = 'list-item';
-        div.textContent = item.name;
-        div.dataset.desc = item.description;
-        list.appendChild(div);
+    listData.forEach((item, index) => {
+      const btn = document.createElement("button");
+      btn.textContent = item.name || item.role || "Unknown";
+      btn.className = "item-btn";
+      btn.addEventListener("click", () => {
+        showDetails(category, index);
       });
-
-      list.style.display = 'block';
+      menuDiv.appendChild(btn);
     });
+  }
 
-    // Click list item to show details
-    list.addEventListener('click', (e) => {
-      if (!e.target.classList.contains('list-item')) return;
-      details.innerText = e.target.dataset.desc;
-      details.style.display = 'block';
+  // Show detailed info of the selected item
+  function showDetails(category, index) {
+    let item;
+    if (category === "landmarks") item = jamData.landmarks[index];
+    else if (category === "characters") item = jamData.characters[index];
+    else if (category === "citizens") item = jamData.citizens[index];
+
+    detailDiv.innerHTML = ""; // Clear previous details
+
+    if (!item) return;
+
+    const title = document.createElement("h3");
+    title.textContent = item.name || item.role || "Unknown";
+    detailDiv.appendChild(title);
+
+    if (category === "landmarks") {
+      const res = document.createElement("p");
+      res.innerHTML = `<strong>Resident:</strong> ${item.resident}`;
+      detailDiv.appendChild(res);
+
+      const desc = document.createElement("p");
+      desc.textContent = item.description;
+      detailDiv.appendChild(desc);
+
+      const sym = document.createElement("p");
+      sym.innerHTML = `<strong>Symbol:</strong> ${item.symbol}`;
+      detailDiv.appendChild(sym);
+    } else if (category === "characters") {
+      const animal = document.createElement("p");
+      animal.innerHTML = `<strong>Animal:</strong> ${item.animal}`;
+      detailDiv.appendChild(animal);
+
+      const role = document.createElement("p");
+      role.innerHTML = `<strong>Role:</strong> ${item.role}`;
+      detailDiv.appendChild(role);
+
+      const abilities = document.createElement("p");
+      abilities.innerHTML = `<strong>Special Abilities:</strong> ${item.abilities}`;
+      detailDiv.appendChild(abilities);
+    } else if (category === "citizens") {
+      const role = document.createElement("p");
+      role.innerHTML = `<strong>Role:</strong> ${item.role}`;
+      detailDiv.appendChild(role);
+
+      const desc = document.createElement("p");
+      desc.textContent = item.description;
+      detailDiv.appendChild(desc);
+    }
+  }
+
+  // Initial menu buttons to pick category
+  function initMenu() {
+    menuDiv.innerHTML = "";
+    detailDiv.innerHTML = "<p>Select a category to explore JAM’s Planet.</p>";
+
+    ["landmarks", "characters", "citizens"].forEach(category => {
+      const btn = document.createElement("button");
+      btn.textContent = category.charAt(0).toUpperCase() + category.slice(1);
+      btn.className = "menu-btn";
+      btn.addEventListener("click", () => renderList(category));
+      menuDiv.appendChild(btn);
     });
-  </script>
-</body>
-</html>
+  }
+
+  // Start app
+  initMenu();
