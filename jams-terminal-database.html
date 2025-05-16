@@ -1,0 +1,169 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Jam's Terminal Database</title>
+  <style>
+    body {
+      background-color: #000;
+      color: #33ff33;
+      font-family: 'Courier New', Courier, monospace;
+      padding: 20px;
+    }
+    .terminal {
+      border: 2px solid #33ff33;
+      padding: 20px;
+      max-width: 800px;
+      margin: 0 auto;
+      background: radial-gradient(#003300, #000);
+      box-shadow: 0 0 15px #33ff33;
+    }
+    .input-area {
+      display: flex;
+      margin-bottom: 20px;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .input-area input {
+      flex: 1;
+      min-width: 150px;
+      background: black;
+      color: #33ff33;
+      border: none;
+      border-bottom: 2px solid #33ff33;
+      font-size: 1.2em;
+      padding: 10px;
+    }
+    .buttons {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .buttons button {
+      background: black;
+      color: #33ff33;
+      border: 2px solid #33ff33;
+      padding: 10px 20px;
+      cursor: pointer;
+      font-size: 1em;
+      transition: all 0.2s ease;
+    }
+    .buttons button:hover {
+      background: #002200;
+      box-shadow: 0 0 8px #33ff33;
+    }
+    .buttons button.active {
+      background: #003300;
+    }
+    .entry {
+      padding: 10px;
+      border-left: 2px solid #33ff33;
+      margin-bottom: 15px;
+      background: rgba(0, 50, 0, 0.2);
+    }
+    .entry p {
+      margin: 5px 0;
+    }
+    .entry strong {
+      color: #66ff66;
+    }
+    hr {
+      border: none;
+      border-top: 1px dashed #33ff33;
+      margin: 15px 0;
+    }
+    @media screen and (max-width: 600px) {
+      .buttons {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="terminal">
+    <div class="input-area">
+      <input type="text" id="searchInput" placeholder="Type to search..." onkeyup="filterData()" />
+    </div>
+    <div class="buttons">
+      <button onclick="switchView('locations')">Locations</button>
+      <button onclick="switchView('jams')">The 8 JAMs</button>
+      <button onclick="switchView('citizens')">Citizens</button>
+    </div>
+    <div id="results"></div>
+  </div>
+  <script>
+    const data = {
+      locations: [
+        { name: "Nulight (Prabha - Light)", resident: "Jam-Wise", description: "A serene village bathed in perpetual twilight, known for its bioluminescent flora and fauna. The village's centerpiece is the Lumina Tree, whose glowing branches light up the entire area.", symbol: "Firefly" },
+        { name: "Marja’s Eye (Chandra - Moon)", resident: "Hoodie-Jam", description: "A town characterized by its reflective lakes and tranquil atmosphere. The night sky here is always clear, making it a perfect spot for stargazing. The town square features a large, mysterious mirror that locals believe holds the secrets of the moon.", symbol: "Cat" },
+        { name: "Surya Zero (Surya - Sun)", resident: "Prototype Zero", description: "A bustling city that never sleeps, powered by solar energy. The architecture is futuristic, with sleek, reflective surfaces that shimmer in the sunlight. The Sunspire Tower in the city's center is a beacon of innovation and purity.", symbol: "Dog" },
+        { name: "Again (Agni - Fire)", resident: "The Inventor", description: "A vibrant lab city where creativity and energy abound. Flames and sparks can be seen dancing around the various inventions and gadgets created here. The central lab, Ignis Core, is a hub of ceaseless innovation.", symbol: "Fire Salamander" },
+        { name: "Bhalu’s Rest (Dhara - Earth)", resident: "Jamstone", description: "A peaceful village nestled in the heart of a dense forest. The village is known for its strong, ancient trees and earthy, grounding energy. Residents here value tradition and resilience.", symbol: "Bear" }
+      ],
+      jams: [
+        { name: "Jam-Wise", domain: "Light", role: "Wisdom and enlightenment", animal: "Firefly" },
+        { name: "Hoodie-Jam", domain: "Moon", role: "Introspection, emotion, subtlety", animal: "Cat" },
+        { name: "Prototype Zero", domain: "Sun", role: "Purity, power, innocence", animal: "Dog" },
+        { name: "The Inventor", domain: "Fire", role: "Creativity, energy, transformation", animal: "Fire Salamander" },
+        { name: "Jamstone", domain: "Earth", role: "Stability, strength, grounding", animal: "Bear" },
+        { name: "AirJam", domain: "Wind", role: "Freedom, agility, swiftness", animal: "Swift" },
+        { name: "Jamwave", domain: "Water", role: "Fluidity, adaptability, depth", animal: "Dolphin" },
+        { name: "Jamstar", domain: "Dawn", role: "New beginnings, hope, brilliance", animal: "Sunbird" }
+      ],
+      citizens: Array.from({ length: 69 }, (_, i) => {
+        const names = [
+          "JAM", "XF", "spoon", "POCARI WET", "toy", "inkboy", "lopu", "JuicyShifu", "Lugiias", "JY", "Clam Shell", "catlaine", "DJ NARU", "Kim Aziz", "FruitKing", "danish3r", "Ericccc", "Avrey", "Mikyuki", "NICHOLAS Torrance", "Battle Mistress", "KYREAUX", "Tae", "Yên", "Bee", "Vlwxys", "Angela", "Pinkie", "Richo", "Joyce", "Chanel", "Jade", "nomad", "Tamba Sebba", "Dejanay", "Mason Cole", "Bug", "Tina", "Emz", "Mudi", "Harley", "Cameryn", "Skout", "Bakone", "Angel Gray", "Xeha", "Kayn", "FixedDiagram", "Kyan Flemett", "Lyndsay Silv", "Mim", "Nico", "Danny Gaze", "Linda", "Jim", "Miranda", "Grant Sounds", "Manu", "Talker Fields", "Dub", "liv gayle", "Mimi Cats", "Salami", "JingleMerry", "Kosha Stevens", "Dodgy Roger", "Marlon", "Max", "Noel DeNonte", "Dan Clarke"
+        ];
+        return { id: String(i).padStart(3, '0'), name: names[i] || "Unknown" };
+      })
+    };
+
+    let currentView = 'locations';
+
+    function switchView(view) {
+      currentView = view;
+      document.querySelectorAll('.buttons button').forEach(btn => btn.classList.remove('active'));
+      const index = ['locations', 'jams', 'citizens'].indexOf(view);
+      document.querySelectorAll('.buttons button')[index].classList.add('active');
+      filterData();
+    }
+
+    function filterData() {
+      const query = document.getElementById('searchInput').value.toLowerCase();
+      const resultsDiv = document.getElementById('results');
+      resultsDiv.innerHTML = '';
+      const items = data[currentView].filter(item =>
+        Object.values(item).some(val => String(val).toLowerCase().includes(query))
+      );
+      if (items.length === 0) {
+        resultsDiv.innerHTML = "<p>No results found.</p>";
+        return;
+      }
+      items.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'entry';
+        if (currentView === 'locations') {
+          div.innerHTML = `<p><strong>Name:</strong> ${item.name}</p>
+                           <p><strong>Resident:</strong> ${item.resident}</p>
+                           <p><strong>Description:</strong> ${item.description}</p>
+                           <p><strong>Symbol:</strong> ${item.symbol}</p>`;
+        } else if (currentView === 'jams') {
+          div.innerHTML = `<p><strong>Name:</strong> ${item.name}</p>
+                           <p><strong>Domain:</strong> ${item.domain}</p>
+                           <p><strong>Role:</strong> ${item.role}</p>
+                           <p><strong>Animal:</strong> ${item.animal}</p>`;
+        } else {
+          div.innerHTML = `<p><strong>ID:</strong> ${item.id}</p>
+                           <p><strong>Name:</strong> ${item.name}</p>`;
+        }
+        resultsDiv.appendChild(div);
+        resultsDiv.appendChild(document.createElement('hr'));
+      });
+    }
+
+    window.onload = () => switchView('locations');
+  </script>
+</body>
+</html>
