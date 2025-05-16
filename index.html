@@ -3,163 +3,195 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Jam's Terminal Database - Vertical Dropdown</title>
+<title>Jam's Terminal Database - Dropdown Edition</title>
 <style>
-  /* Base styles */
   body {
     background-color: #253A4B;
     color: white;
     font-family: 'Courier New', Courier, monospace;
     padding: 20px;
-    margin: 0;
   }
   .terminal {
-    max-width: 900px;
+    max-width: 800px;
     margin: 0 auto;
   }
-  input#searchInput {
+  .input-area {
+    margin-bottom: 15px;
+  }
+  input[type="text"] {
     width: 100%;
     font-size: 1.2em;
-    padding: 12px 15px;
-    margin-bottom: 20px;
+    padding: 8px 12px;
     border: none;
-    border-radius: 5px;
-    outline: none;
-    background: #1f2f3f;
-    color: white;
-    box-shadow:
-      0 0 5px white;
-  }
-  input#searchInput::placeholder {
-    color: #a0b8cd;
-  }
-
-  /* Dropdown container styles */
-  .category {
-    margin-bottom: 10px;
-  }
-  .category > button {
-    background: none;
-    border: none;
-    color: white;
-    font-weight: bold;
-    font-size: 1.3em;
-    cursor: pointer;
-    text-align: left;
-    width: 100%;
-    padding: 10px 5px;
-    user-select: none;
-    text-shadow:
-      0 0 6px white;
-    transition: background 0.3s ease;
-    border-radius: 5px;
-  }
-  .category > button:hover {
-    background: #3c5c76;
-  }
-
-  /* Nested dropdown */
-  .subcategory {
-    margin-left: 20px;
-    margin-top: 6px;
-  }
-  .subcategory > button {
-    background: none;
-    border: none;
-    color: #d0e8ff;
-    font-weight: normal;
-    font-size: 1.1em;
-    cursor: pointer;
-    text-align: left;
-    width: 100%;
-    padding: 6px 5px;
-    user-select: none;
     border-radius: 4px;
-    text-shadow:
-      0 0 4px #a6c8ff;
-    transition: background 0.25s ease;
+    outline: none;
+    box-shadow: 0 0 5px white;
+    background-color: #1a2a3a;
+    color: white;
   }
-  .subcategory > button:hover {
-    background: #2a4760;
+  .buttons {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 15px;
   }
-  /* Content lists */
-  .content-list {
-    margin-left: 20px;
-    margin-top: 4px;
-    list-style: none;
-    padding-left: 0;
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.3s ease;
-  }
-  .content-list.open {
-    max-height: 1000px; /* large enough to show full content */
-  }
-  .content-list li {
-    padding: 4px 6px;
-    cursor: default;
-    color: #b0d1ff;
+  .buttons button {
+    background-color: transparent;
+    color: white;
+    border: none;
+    padding: 8px 16px;
     font-size: 1em;
-    text-shadow: 0 0 3px #90b0ff;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
   }
-  .content-list li:hover {
-    background-color: #3c5c76;
-    border-radius: 3px;
+  .buttons button.active,
+  .buttons button:hover {
+    background-color: #1a77ff;
+    box-shadow: 0 0 10px #1a77ff;
   }
-
-  /* Description styling */
-  .description {
-    margin-top: 6px;
-    margin-left: 40px;
-    color: #c9dff8;
-    font-size: 0.9em;
-    font-style: italic;
+  details {
+    margin-bottom: 8px;
   }
-
-  /* Responsive adjustments */
-  @media (max-width: 600px) {
-    body {
-      padding: 12px;
-    }
-    .category > button,
-    .subcategory > button {
-      font-size: 1.1em;
-      padding: 8px 5px;
-    }
-    .content-list li {
-      font-size: 0.9em;
-    }
+  details summary {
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 1.1em;
+    outline: none;
+  }
+  details[open] summary {
+    color: #1a77ff;
+    text-shadow: 0 0 6px #1a77ff;
+  }
+  .entry {
+    margin-left: 18px;
+    margin-top: 4px;
+    font-size: 0.95em;
+    white-space: pre-wrap;
+  }
+  .entry .label {
+    font-weight: bold;
+  }
+  .hidden {
+    display: none;
   }
 </style>
 </head>
 <body>
   <div class="terminal">
-    <input type="text" id="searchInput" placeholder="Search landmarks, characters, or citizens..." onkeyup="filterData()" />
-    <div id="dropdownContainer"></div>
+    <div class="input-area">
+      <input type="text" id="searchInput" placeholder="Type to search..." oninput="filterData()" />
+    </div>
+    <div class="buttons">
+      <button id="btnAll" class="active" onclick="switchView('all')">All</button>
+      <button id="btnLandmarks" onclick="switchView('landmarks')">Landmarks</button>
+      <button id="btnCharacters" onclick="switchView('characters')">Characters</button>
+      <button id="btnCitizens" onclick="switchView('citizens')">Citizens</button>
+    </div>
+    <div id="output"></div>
   </div>
-</body>
-</html>
 <script>
   const data = {
     landmarks: [
-      { name: "Nulight (Prabha - Light)", resident: "Jam-Wise", description: "A serene village bathed in perpetual twilight, known for its bioluminescent flora and fauna. The village's centerpiece is the Lumina Tree, whose glowing branches light up the entire area.", symbol: "Firefly" },
-      { name: "Marja’s Eye (Chandra - Moon)", resident: "Hoodie-Jam", description: "A town characterized by its reflective lakes and tranquil atmosphere. The night sky here is always clear, making it a perfect spot for stargazing. The town square features a large, mysterious mirror that locals believe holds the secrets of the moon.", symbol: "Cat" },
-      { name: "Surya Zero (Surya - Sun)", resident: "Prototype Zero", description: "A bustling city that never sleeps, powered by solar energy. The architecture is futuristic, with sleek, reflective surfaces that shimmer in the sunlight. The Sunspire Tower in the city's center is a beacon of innovation and purity.", symbol: "Dog" },
-      { name: "Again (Agni - Fire)", resident: "The Inventor", description: "A vibrant lab city where creativity and energy abound. Flames and sparks can be seen dancing around the various inventions and gadgets created here. The central lab, Ignis Core, is a hub of ceaseless innovation.", symbol: "Fire Salamander" },
-      { name: "Bhalu’s Rest (Dhara - Earth)", resident: "Jamstone", description: "A grounded village surrounded by lush forests and towering mountains. The community here is known for their strength and resilience, and they honor the bear as their guardian spirit.", symbol: "Bear" },
-      { name: "Airpota (Vayu - Wind)", resident: "AirJam", description: "A breezy town perched on high cliffs, where the wind is a constant companion. The swift is a common sight here, symbolizing freedom and agility.", symbol: "Swift" },
-      { name: "Apas Blue (Jala - Water)", resident: "Jamwave", description: "A coastal city famous for its deep blue waters and fluid architecture. Dolphins frequently swim near the harbor, embodying adaptability and depth.", symbol: "Dolphin" },
-      { name: "Pratu’s Dawn (Udaya - Dawn)", resident: "Jamstar", description: "A village that wakes with the first light of dawn, filled with hope and new beginnings. The sunbird here is a symbol of brilliance and optimism.", symbol: "Sunbird" }
+      {
+        name: "Nulight (Prabha - Light)",
+        resident: "Jam-Wise",
+        description: "A serene village bathed in perpetual twilight, known for its bioluminescent flora and fauna. The village's centerpiece is the Lumina Tree, whose glowing branches light up the entire area.",
+        symbol: "Firefly"
+      },
+      {
+        name: "Marja’s Eye (Chandra - Moon)",
+        resident: "Hoodie-Jam",
+        description: "A town characterized by its reflective lakes and tranquil atmosphere. The night sky here is always clear, making it a perfect spot for stargazing. The town square features a large, mysterious mirror that locals believe holds the secrets of the moon.",
+        symbol: "Cat"
+      },
+      {
+        name: "Surya Zero (Surya - Sun)",
+        resident: "Prototype Zero",
+        description: "A bustling city that never sleeps, powered by solar energy. The architecture is futuristic, with sleek, reflective surfaces that shimmer in the sunlight. The Sunspire Tower in the city's center is a beacon of innovation and purity.",
+        symbol: "Dog"
+      },
+      {
+        name: "Again (Agni - Fire)",
+        resident: "The Inventor",
+        description: "A vibrant lab city where creativity and energy abound. Flames and sparks can be seen dancing around the various inventions and gadgets created here. The central lab, Ignis Core, is a hub of ceaseless innovation.",
+        symbol: "Fire Salamander"
+      },
+      {
+        name: "Bhalu’s Rest (Dhara - Earth)",
+        resident: "Jamstone",
+        description: "A peaceful village nestled in the heart of a dense forest. The village is known for its strong, ancient trees and earthy, grounding energy. The Great Bear Rock stands as a guardian over the village.",
+        symbol: "Bear"
+      },
+      {
+        name: "Airpota (Vayu - Wind)",
+        resident: "AirJam",
+        description: "A town that floats among the clouds, constantly moving with the wind. The structures are light and airy, with many platforms and bridges connecting different parts of the town. The Windward Tower provides stunning views of the surrounding skies.",
+        symbol: "Swift"
+      },
+      {
+        name: "Apas Blue (Jala - Water)",
+        resident: "Jamwave",
+        description: "A city built on and under water, with domed structures and canals connecting various districts. The water here is crystal clear, allowing for vibrant underwater life to be seen from above. The Deep Blue Dome is the cultural heart of the city.",
+        symbol: "Dolphin"
+      },
+      {
+        name: "Pratu’s Dawn (Udaya - Dawn)",
+        resident: "Jamstar",
+        description: "A village where every day begins with a breathtaking sunrise. The community is focused on renewal and hope, with many gardens and open spaces. The Dawnspire monument captures the first light of the day, symbolizing new beginnings.",
+        symbol: "Sunbird"
+      }
     ],
     characters: [
-      { name: "Jam-Wise", element: "Prabhasa (Light)", animal: "Firefly", description: "Embodies wisdom and enlightenment, guiding others with his gentle glow." },
-      { name: "Hoodie-Jam", element: "Soma (Moon)", animal: "Cat", description: "A mysterious figure, introspective and intuitive, moving silently through the night." },
-      { name: "Prototype Zero", element: "Surya (Sun)", animal: "Dog", description: "Pure and powerful, radiating innocence and strength." },
-      { name: "The Inventor", element: "Anala (Fire)", animal: "Fire Salamander", description: "A creative force, constantly transforming ideas into reality." },
-      { name: "Jamstone", element: "Dhara (Earth)", animal: "Bear", description: "Strong and grounded, a pillar of stability for the community." },
-      { name: "AirJam", element: "Anila (Wind)", animal: "Swift", description: "Free and agile, the embodiment of movement and freedom." },
-      { name: "Jamwave", element: "Apas (Water)", animal: "Dolphin", description: "Fluid and adaptable, with a deep emotional current." },
-      { name: "Jamstar", element: "Pratyusha (Dawn)", animal: "Sunbird", description: "A symbol of hope and brilliant new beginnings." }
+      {
+        name: "Jam-Wise (Prabhasa - Light)",
+        animal: "Firefly",
+        role: "Represents wisdom and enlightenment.",
+        abilities: "Can illuminate dark areas and bring clarity to confusing situations."
+      },
+      {
+        name: "Hoodie-Jam (Soma - Moon)",
+        animal: "Cat",
+        role: "Reflects introspection, emotion, and subtlety.",
+        abilities: "Can become nearly invisible and see in total darkness."
+      },
+      {
+        name: "Prototype Zero (Surya - Sun)",
+        animal: "Dog",
+        role: "Symbolizes purity, power, and innocence.",
+        abilities: "Radiates warmth and energy, capable of healing and rejuvenation."
+      },
+      {
+        name: "The Inventor (Anala - Fire)",
+        animal: "Fire Salamander",
+        role: "Embodies creativity, energy, and transformation.",
+        abilities: "Can manipulate fire and create innovative solutions from seemingly nothing."
+      },
+      {
+        name: "Jamstone (Dhara - Earth)",
+        animal: "Bear",
+        role: "Represents stability, strength, and grounding.",
+        abilities: "Possesses immense strength and the ability to control earth and stone."
+      },
+      {
+        name: "AirJam (Anila - Wind)",
+        animal: "Swift",
+        role: "Symbolizes freedom, agility, and swiftness.",
+        abilities: "Can fly and manipulate wind currents."
+      },
+      {
+        name: "Jamwave (Apas - Water)",
+        animal: "Dolphin",
+        role: "Represents fluidity, adaptability, and depth.",
+        abilities: "Can communicate with sea creatures and navigate turbulent waters."
+      },
+      {
+        name: "Jamstar (Pratyusha - Dawn)",
+        animal: "Sunbird",
+        role: "Symbolizes new beginnings, hope, and brilliance.",
+        abilities: "Can summon the first light of dawn to inspire and energize."
+      }
     ],
     citizens: [
       { id: "000", name: "JAM" },
@@ -235,470 +267,122 @@
     ]
   };
 
-  const container = document.getElementById('dropdownContainer');
-  const searchInput = document.getElementById('searchInput');
-
-  function createToggleButton(text) {
-    const btn = document.createElement('button');
-    btn.textContent = text;
-    btn.className = 'toggle-btn';
-    btn.addEventListener('click', () => {
-      const list = btn.nextElementSibling;
-      const isOpen = list.classList.contains('open');
-      if (isOpen) {
-        list.classList.remove('open');
-      } else {
-        list.classList.add('open');
-      }
-    });
-    return btn;
-  }
-
-  function createListItem(text, description) {
-    const li = document.createElement('li');
-    li.textContent = text;
-    if (description) {
-      const desc = document.createElement('div');
-      desc.className = 'description';
-      desc.textContent = description;
-      li.appendChild(desc);
-    }
-    return li;
-  }
-
-  function buildNestedList() {
-    container.innerHTML = '';
-
-    // 'All' category: includes everything flat, for quick search
-    const allBtn = createToggleButton('All');
-    const allList = document.createElement('ul');
-    allList.className = 'content-list';
-
-    // Landmarks
-    data.landmarks.forEach(item => {
-      const text = `${item.name} — Resident: ${item.resident} — Symbol: ${item.symbol}`;
-      const li = createListItem(text, item.description);
-      allList.appendChild(li);
-    });
-    // Characters
-    data.characters.forEach(item => {
-      const text = `${item.name} (${item.element}, Animal: ${item.animal})`;
-      const li = createListItem(text, item.description);
-      allList.appendChild(li);
-    });
-    // Citizens
-    data.citizens.forEach(item => {
-      const text = `${item.id} - ${item.name}`;
-      const li = createListItem(text);
-      allList.appendChild(li);
-    });
-
-    container.appendChild(allBtn);
-    container.appendChild(allList);
-
-    // Landmarks category
-    const landmarksBtn = createToggleButton('Landmarks');
-    const landmarksList = document.createElement('ul');
-    landmarksList.className = 'content-list';
-
-    data.landmarks.forEach(item => {
-      const li = createListItem(item.name, item.description);
-      landmarksList.appendChild(li);
-    });
-
-    container.appendChild(landmarksBtn);
-    container.appendChild(landmarksList);
-
-    // Characters category
-    const charactersBtn = createToggleButton('Characters');
-    const charactersList = document.createElement('ul');
-    charactersList.className = 'content-list';
-
-    data.characters.forEach(item => {
-      const li = createListItem(item.name, item.description);
-      charactersList.appendChild(li);
-    });
-
-    container.appendChild(charactersBtn);
-    container.appendChild(charactersList);
-
-    // Citizens category
-    const citizensBtn = createToggleButton('Citizens');
-    const citizensList = document.createElement('ul');
-    citizensList.className = 'content-list';
-
-    data.citizens.forEach(item => {
-      const li = createListItem(`${item.id} - ${item.name}`);
-      citizensList.appendChild(li);
-    });
-
-    container.appendChild(citizensBtn);
-    container.appendChild(citizensList);
-  }
-
-  function filterData() {
-    const filter = searchInput.value.toLowerCase();
-
-    // Filter all list items in all open lists
-    const lists = container.querySelectorAll('ul.content-list');
-
-    lists.forEach
-      },
-      {
-        id: "068",
-        name: "Dan Clarke"
-      }
-    ],
-  };
-
-  // Current view state
-  let currentView = "all";
+  let currentView = 'all';
 
   function switchView(view) {
     currentView = view;
-    // Update active button styling
-    document.querySelectorAll(".buttons button").forEach((btn) => {
-      btn.classList.toggle("active", btn.textContent.toLowerCase() === view);
+    updateActiveButton(view);
+    renderData();
+  }
+
+  function updateActiveButton(view) {
+    ['btnAll', 'btnLandmarks', 'btnCharacters', 'btnCitizens'].forEach(id => {
+      const btn = document.getElementById(id);
+      btn.classList.toggle('active', id === 'btn' + capitalize(view));
     });
-    displayData();
   }
 
-  // Recursively create nested list items
-  function createListItems(items) {
-    const ul = document.createElement("ul");
-    items.forEach(item => {
-      const li = document.createElement("li");
-      if (typeof item === "string") {
-        li.textContent = item;
-      } else if (typeof item === "object") {
-        // If item has children, create nested list
-        if (item.children) {
-          const span = document.createElement("span");
-          span.textContent = item.title || item.name || "Item";
-          span.style.cursor = "pointer";
-          span.onclick = () => {
-            span.nextElementSibling.classList.toggle("hidden");
-          };
-          li.appendChild(span);
-          const nestedUl = createListItems(item.children);
-          nestedUl.classList.add("nested");
-          li.appendChild(nestedUl);
-        } else {
-          // No children, just show text content
-          li.textContent = item.name || item.title || JSON.stringify(item);
-        }
-      }
-      ul.appendChild(li);
-    });
-    return ul;
+  function capitalize(str) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
   }
 
-  function displayData() {
-    const output = document.getElementById("output");
-    output.innerHTML = "";
+  function renderData() {
+    const container = document.getElementById('output');
+    container.innerHTML = '';
 
-    let dataToDisplay;
+    let content = '';
 
-    if (currentView === "all") {
-      dataToDisplay = [
-        {
-          title: "Landmarks",
-          children: data.landmarks.map(l => [
-            `Name: ${l.name}`,
-            `Resident: ${l.resident}`,
-            `Description: ${l.description}`,
-            `Symbol: ${l.symbol}`
-          ])
-        },
-        {
-          title: "Characters",
-          children: data.characters.map(c => [
-            `Name: ${c.name}`,
-            `Animal: ${c.animal}`,
-            `Role: ${c.role}`,
-            `Special Abilities: ${c.abilities}`
-          ])
-        },
-        {
-          title: "Citizens",
-          children: data.citizens.map(citizen => `${citizen.id} - ${citizen.name}`)
-        }
-      ];
-    } else if (currentView === "landmarks") {
-      dataToDisplay = data.landmarks.map(l => [
-        `Name: ${l.name}`,
-        `Resident: ${l.resident}`,
-        `Description: ${l.description}`,
-        `Symbol: ${l.symbol}`
-      ]);
-    } else if (currentView === "characters") {
-      dataToDisplay = data.characters.map(c => [
-        `Name: ${c.name}`,
-        `Animal: ${c.animal}`,
-        `Role: ${c.role}`,
-        `Special Abilities: ${c.abilities}`
-      ]);
-    } else if (currentView === "citizens") {
-      dataToDisplay = data.citizens.map(citizen => `${citizen.id} - ${citizen.name}`);
-    }
-
-    // Flatten nested arrays for display
-    function flatten(arr) {
-      return arr.reduce((acc, val) => acc.concat(Array.isArray(val) ? flatten(val) : val), []);
-    }
-
-    if (Array.isArray(dataToDisplay) && dataToDisplay.length) {
-      if (currentView === "all") {
-        dataToDisplay.forEach(section => {
-          const sectionDiv = document.createElement("div");
-          const header = document.createElement("h2");
-          header.textContent = section.title;
-          sectionDiv.appendChild(header);
-
-          section.children.forEach(itemArr => {
-            const itemDiv = document.createElement("div");
-            flatten(itemArr).forEach(line => {
-              const p = document.createElement("p");
-              p.textContent = line;
-              itemDiv.appendChild(p);
-            });
-            sectionDiv.appendChild(itemDiv);
-          });
-
-          output.appendChild(sectionDiv);
-        });
-      } else {
-        dataToDisplay.forEach(itemArr => {
-          const itemDiv = document.createElement("div");
-          flatten(itemArr).forEach(line => {
-            const p = document.createElement("p");
-            p.textContent = line;
-            itemDiv.appendChild(p);
-          });
-          output.appendChild(itemDiv);
-        });
-      }
-    } else {
-      output.textContent = "No data available.";
-    }
-  }
-
-  function filterData() {
-    const query = document.getElementById("searchInput").value.toLowerCase();
-    const output = document.getElementById("output");
-    output.innerHTML = "";
-
-    if (!query) {
-      displayData();
-      return;
-    }
-
-    let filtered = [];
-
-    if (currentView === "all" || currentView === "landmarks") {
-      filtered = filtered.concat(
-        data.landmarks.filter(l =>
-          l.name.toLowerCase().includes(query) ||
-          l.resident.toLowerCase().includes(query) ||
-          l.description.toLowerCase().includes(query) ||
-          l.symbol.toLowerCase().includes(query)
-        ).map(l => ({
-          category: "Landmarks",
-          data: l
-        }))
-      );
-    }
-
-    if (currentView === "all" || currentView === "characters") {
-      filtered = filtered.concat(
-        data.characters.filter(c =>
-          c.name.toLowerCase().includes(query) ||
-          c.animal.toLowerCase().includes(query) ||
-          c.role.toLowerCase().includes(query) ||
-          c.abilities.toLowerCase().includes(query)
-        ).map(c => ({
-          category: "Characters",
-          data: c
-        }))
-      );
-    }
-
-    if (currentView === "all" || currentView === "citizens") {
-      filtered = filtered.concat(
-        data.citizens.filter(citizen =>
-          citizen.name.toLowerCase().includes(query) ||
-          citizen.id.toLowerCase().includes(query)
-        ).map(citizen => ({
-          category: "Citizens",
-          data: citizen
-        }))
-      );
-    }
-
-    if (filtered.length === 0) {
-      output.textContent = "No results found.";
-      return;
-    }
-
-    const grouped = filtered.reduce((acc, item) => {
-      if (!acc[item.category]) acc[item.category] = [];
-      acc[item.category].push(item.data);
-      return acc;
-    }, {});
-
-    Object.entries(grouped).forEach(([category, items]) => {
-      const sectionDiv = document.createElement("div");
-      const header = document.createElement("h2");
-      header.textContent = category;
-      sectionDiv.appendChild(header);
-
-      items.forEach(item => {
-        const itemDiv = document.createElement("div");
-        for (const [key, val] of Object.entries(item)) {
-          const p = document.createElement("p");
-          p.textContent = `${key.charAt(0).toUpperCase() + key.slice(1)}: ${val}`;
-          itemDiv.appendChild(p);
-        }
-        sectionDiv.appendChild(itemDiv);
+    if (currentView === 'all' || currentView === 'landmarks') {
+      content += '<details open><summary>Landmarks</summary>';
+      data.landmarks.forEach(item => {
+        content += formatLandmark(item);
       });
-
-      output.appendChild(sectionDiv);
-    });
-  }
-
-  document.addEventListener("DOMContentLoaded", () => {
-    switchView("all");
-  });
-</script>
-              p.textContent = line;
-              itemDiv.appendChild(p);
-            });
-            itemDiv.style.marginBottom = "1em";
-            sectionDiv.appendChild(itemDiv);
-          });
-
-          output.appendChild(sectionDiv);
-        });
-      } else {
-        // For other views (landmarks, characters, citizens)
-        dataToDisplay.forEach(item => {
-          const itemDiv = document.createElement("div");
-          if (Array.isArray(item)) {
-            item.forEach(line => {
-              const p = document.createElement("p");
-              p.textContent = line;
-              itemDiv.appendChild(p);
-            });
-          } else {
-            const p = document.createElement("p");
-            p.textContent = item;
-            itemDiv.appendChild(p);
-          }
-          itemDiv.style.marginBottom = "1em";
-          output.appendChild(itemDiv);
-        });
-      }
-    } else {
-      output.textContent = "No results found.";
-    }
-  }
-
-  function filterData() {
-    const query = document.getElementById("searchInput").value.toLowerCase();
-
-    // Filter based on currentView or all if 'all' selected
-    let filteredData = [];
-
-    function matchesQuery(text) {
-      return text.toLowerCase().includes(query);
+      content += '</details>';
     }
 
-    if (!query) {
-      // If no query, just display current view
-      displayData();
-      return;
-    }
-
-    if (currentView === "all" || currentView === "landmarks") {
-      const landmarksMatches = data.landmarks.filter(l =>
-        [l.name, l.resident, l.description, l.symbol].some(matchesQuery)
-      );
-      if (landmarksMatches.length) {
-        filteredData.push({
-          title: "Landmarks",
-          children: landmarksMatches.map(l => [
-            `Name: ${l.name}`,
-            `Resident: ${l.resident}`,
-            `Description: ${l.description}`,
-            `Symbol: ${l.symbol}`
-          ])
-        });
-      }
-    }
-
-    if (currentView === "all" || currentView === "characters") {
-      const characterMatches = data.characters.filter(c =>
-        [c.name, c.animal, c.role, c.abilities].some(matchesQuery)
-      );
-      if (characterMatches.length) {
-        filteredData.push({
-          title: "Characters",
-          children: characterMatches.map(c => [
-            `Name: ${c.name}`,
-            `Animal: ${c.animal}`,
-            `Role: ${c.role}`,
-            `Special Abilities: ${c.abilities}`
-          ])
-        });
-      }
-    }
-
-    if (currentView === "all" || currentView === "citizens") {
-      const citizenMatches = data.citizens.filter(citizen =>
-        `${citizen.id} ${citizen.name}`.toLowerCase().includes(query)
-      );
-      if (citizenMatches.length) {
-        filteredData.push({
-          title: "Citizens",
-          children: citizenMatches.map(citizen => `${citizen.id} - ${citizen.name}`)
-        });
-      }
-    }
-
-    // Display filtered results
-    const output = document.getElementById("output");
-    output.innerHTML = "";
-
-    if (filteredData.length === 0) {
-      output.textContent = "No results found.";
-      return;
-    }
-
-    filteredData.forEach(section => {
-      const sectionDiv = document.createElement("div");
-      const header = document.createElement("h2");
-      header.textContent = section.title;
-      sectionDiv.appendChild(header);
-
-      section.children.forEach(itemArr => {
-        const itemDiv = document.createElement("div");
-        itemArr.forEach(line => {
-          const p = document.createElement("p");
-          p.textContent = line;
-          itemDiv.appendChild(p);
-        });
-        itemDiv.style.marginBottom = "1em";
-        sectionDiv.appendChild(itemDiv);
+    if (currentView === 'all' || currentView === 'characters') {
+      content += '<details open><summary>Characters</summary>';
+      data.characters.forEach(item => {
+        content += formatCharacter(item);
       });
+      content += '</details>';
+    }
 
-      output.appendChild(sectionDiv);
-    });
+    if (currentView === 'all' || currentView === 'citizens') {
+      content += '<details open><summary>Citizens</summary>';
+      data.citizens.forEach(item => {
+        content += formatCitizen(item);
+      });
+      content += '</details>';
+    }
+
+    container.innerHTML = content;
+  }
+// Switch view when clicking buttons
+function switchView(view) {
+  currentView = view;
+  document.querySelectorAll('.buttons button').forEach(btn => btn.classList.remove('active'));
+  document.getElementById('btn' + capitalize(view)).classList.add('active');
+  renderData();
+  document.getElementById('searchInput').value = '';
+}
+
+// Capitalize first letter helper
+function capitalize(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+// Filter data based on search input
+function filterData() {
+  const query = document.getElementById('searchInput').value.toLowerCase();
+  if (!query) {
+    renderData();
+    return;
   }
 
-  // Initialize buttons and default view
-  document.querySelectorAll(".buttons button").forEach(button => {
-    button.addEventListener("click", () => switchView(button.textContent.toLowerCase()));
+  const container = document.getElementById('output');
+  let content = '';
+
+  // Flatten all data entries with categories for searching
+  const allItems = [];
+
+  if (currentView === 'all' || currentView === 'landmarks') {
+    data.landmarks.forEach(item => allItems.push({ ...item, type: 'Landmark' }));
+  }
+  if (currentView === 'all' || currentView === 'characters') {
+    data.characters.forEach(item => allItems.push({ ...item, type: 'Character' }));
+  }
+  if (currentView === 'all' || currentView === 'citizens') {
+    data.citizens.forEach(item => allItems.push({ ...item, type: 'Citizen' }));
+  }
+
+  const filtered = allItems.filter(item => {
+    return Object.values(item).some(val =>
+      String(val).toLowerCase().includes(query)
+    );
   });
 
-  switchView("all");
+  if (filtered.length === 0) {
+    content = '<p>No results found.</p>';
+  } else {
+    filtered.forEach(item => {
+      content += `<details open><summary>${item.name} (${item.type})</summary>`;
+      content += `<div class="entry">`;
+      for (const [key, value] of Object.entries(item)) {
+        if (key !== 'name' && key !== 'type') {
+          content += `<div><span class="label">${capitalize(key)}:</span> ${value}</div>`;
+        }
+      }
+      content += `</div></details>`;
+    });
+  }
+
+  container.innerHTML = content;
+}
+
+// Initialize
+let currentView = 'all';
+renderData();
 </script>
+</body>
+</html>
