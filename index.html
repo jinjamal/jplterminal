@@ -8,73 +8,78 @@
 <style>
   body {
     background-color: #839665;
-    color: #000;
-    font-family: 'Courier New', Courier, monospace;
+    color: #1a1a1a;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     padding: 20px;
     margin: 0;
   }
   .terminal {
-    border: 4px solid #000;
-    padding: 20px;
     max-width: 800px;
-    margin: 20px auto;
-    background-color: #839665;
-    box-shadow: none;
+    margin: 0 auto;
+    background: #a1b287;
+    border-radius: 12px;
+    padding: 20px 30px;
+    box-sizing: border-box;
   }
   .input-area {
-    display: flex;
     margin-bottom: 20px;
-    gap: 10px;
-    flex-wrap: wrap;
   }
   .input-area input {
-    flex: 1;
-    min-width: 150px;
-    background: #c7d2a0; /* lighter green for input */
-    color: #000;
-    border: 3px solid #000;
-    font-size: 1.3em;
-    padding: 12px;
-    border-radius: 6px;
-    box-shadow: none;
+    width: 100%;
+    background: #c3d0a7;
+    color: #1a1a1a;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.2em;
+    padding: 12px 15px;
+    box-sizing: border-box;
+    transition: background-color 0.3s ease;
   }
   .input-area input:focus {
+    background: #d6e2b3;
     outline: none;
-    border-color: #3e4f1c;
-    background-color: #d4dfaf;
   }
   .buttons {
     display: flex;
-    gap: 10px;
+    gap: 12px;
     margin-bottom: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
   }
   .buttons button {
-    background: #c7d2a0;
-    color: #000;
-    border: 3px solid #000;
-    padding: 12px 24px;
+    flex: 1 1 120px;
+    max-width: 33%;
+    min-width: 100px;
+    background: #a1b287;
+    color: #1a1a1a;
+    font-weight: 600;
+    font-size: 1.05em;
+    border-radius: 8px;
+    border: none;
+    padding: 12px 0;
     cursor: pointer;
-    font-size: 1.1em;
-    border-radius: 6px;
-    transition: background-color 0.2s ease;
+    transition: background-color 0.25s ease, color 0.25s ease;
+    user-select: none;
   }
-  .buttons button:hover {
-    background-color: #aab476;
+  .buttons button:hover,
+  .buttons button:focus {
+    background: #7a8750;
+    color: #f0f0e8;
+    outline: none;
   }
   .buttons button.active {
-    background: #8b9a4c;
-    font-weight: bold;
+    background: #5f6c3d;
+    color: #f0f0e8;
   }
   #output {
-    background: #c7d2a0;
-    color: #000;
-    border: 3px solid #000;
-    padding: 15px;
-    border-radius: 6px;
-    font-size: 1.15em;
+    background: #c3d0a7;
+    border-radius: 10px;
+    padding: 15px 20px;
+    font-size: 1em;
     white-space: pre-wrap;
-    line-height: 1.4em;
-    min-height: 200px;
+    color: #1a1a1a;
+    max-height: 500px;
+    overflow-y: auto;
   }
 </style>
 </head>
