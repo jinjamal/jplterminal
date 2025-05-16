@@ -1,101 +1,85 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Jam's Terminal Database</title>
-  <style>
-    body {
-      background-color: #000;
-      color: #33ff33;
-      font-family: 'Courier New', Courier, monospace;
-      padding: 20px;
-    }
-    .terminal {
-      border: 2px solid #33ff33;
-      padding: 20px;
-      max-width: 800px;
-      margin: 0 auto;
-      background: radial-gradient(#003300, #000);
-      box-shadow: 0 0 15px #33ff33;
-    }
-    .input-area {
-      display: flex;
-      margin-bottom: 20px;
-    }
-    .input-area input {
-      flex: 1;
-      background: black;
-      color: #33ff33;
-      border: none;
-      border-bottom: 2px solid #33ff33;
-      font-size: 1.2em;
-      padding: 10px;
-    }
-    .entry {
-      margin-bottom: 15px;
-    }
-    .entry a {
-      color: #33ff33;
-      text-decoration: underline;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Jam's Terminal Database</title>
+<style>
+  body {
+    background-color: #000;
+    color: #33ff33;
+    font-family: 'Courier New', Courier, monospace;
+    padding: 20px;
+  }
+  .terminal {
+    border: 2px solid #33ff33;
+    padding: 20px;
+    max-width: 800px;
+    margin: 0 auto;
+    background: radial-gradient(#003300, #000);
+    box-shadow: 0 0 15px #33ff33;
+  }
+  .input-area {
+    display: flex;
+    margin-bottom: 20px;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .input-area input {
+    flex: 1;
+    min-width: 150px;
+    background: black;
+    color: #33ff33;
+    border: none;
+    border-bottom: 2px solid #33ff33;
+    font-size: 1.2em;
+    padding: 10px;
+  }
+  button {
+    background: black;
+    color: #33ff33;
+    border: 2px solid #33ff33;
+    cursor: pointer;
+    font-family: 'Courier New', monospace;
+    font-size: 1.1em;
+    padding: 10px 15px;
+    transition: background 0.3s ease;
+  }
+  button:hover, button.active {
+    background: #33ff33;
+    color: black;
+  }
+  .entry {
+    margin-bottom: 20px;
+  }
+  .entry a {
+    color: #33ff33;
+    text-decoration: underline;
+  }
+  .symbol {
+    font-style: italic;
+    opacity: 0.7;
+  }
+  /* Scroll area for long lists */
+  #results {
+    max-height: 500px;
+    overflow-y: auto;
+  }
+</style>
 </head>
 <body>
   <div class="terminal">
     <div class="input-area">
+      <button id="locationsBtn" class="active" onclick="switchView('locations')">Locations</button>
+      <button id="jamsBtn" onclick="switchView('jams')">The 8 JAMs</button>
+      <button id="citizensBtn" onclick="switchView('citizens')">Citizens</button>
       <input type="text" id="search" placeholder="Search..." oninput="filterEntries()" />
     </div>
     <div id="results"></div>
   </div>
 
   <script>
-    const data = [
-      {
-        id: "item001",
-        name: "Mystic Jamstone",
-        description: "A glowing artifact from Jam's Planet.",
-        link: "https://yourdomain.com/jamstone"
-      },
-      {
-        id: "item002",
-        name: "AirJam",
-        description: "A breezy variant of Jam that controls wind and rhythm.",
-        link: "https://yourdomain.com/airjam"
-      },
-      {
-        id: "item003",
-        name: "Jam-Wise",
-        description: "The spiritual sage who whispers in riddles.",
-        link: "https://yourdomain.com/jamwise"
-      }
-    ];
-
-    function filterEntries() {
-      const query = document.getElementById("search").value.toLowerCase();
-      const results = document.getElementById("results");
-      results.innerHTML = "";
-
-      const filtered = data.filter(item =>
-        item.name.toLowerCase().includes(query) ||
-        item.description.toLowerCase().includes(query)
-      );
-
-      if (filtered.length === 0) {
-        results.innerHTML = "<p>No results found.</p>";
-        return;
-      }
-
-      filtered.forEach(item => {
-        const entry = document.createElement("div");
-        entry.className = "entry";
-        entry.innerHTML = `<strong>${item.name}</strong><br>${item.description}<br><a href="${item.link}" target="_blank">${item.link}</a>`;
-        results.appendChild(entry);
-      });
-    }
-
-    window.onload = filterEntries;
-  </script>
-</body>
-</html>
+    // DATA ARRAYS
+    const locations = [
+      { name: "Nulight (Prabha - Light)", resident: "Jam-Wise", description: "A serene village bathed in perpetual twilight, known for its bioluminescent flora and fauna. The village's centerpiece is the Lumina Tree, whose glowing branches light up the entire area.", symbol: "Firefly" },
+      { name: "Marja’s Eye (Chandra - Moon)", resident: "Hoodie-Jam", description: "A town characterized by its reflective lakes and tranquil atmosphere. The night sky here is always clear, making it a p
