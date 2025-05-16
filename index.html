@@ -5,81 +5,78 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Jam's Terminal Database</title>
-  <style>
-    body {
-      background-color: #000;
-      color: #33ff33;
-      font-family: 'Courier New', Courier, monospace;
-      padding: 20px;
-    }
-    .terminal {
-      border: 2px solid #33ff33;
-      padding: 20px;
-      max-width: 800px;
-      margin: 0 auto;
-      background: radial-gradient(#003300, #000);
-      box-shadow: 0 0 15px #33ff33;
-    }
-    .input-area {
-      display: flex;
-      margin-bottom: 20px;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-    .input-area input {
-      flex: 1;
-      min-width: 150px;
-      background: black;
-      color: #33ff33;
-      border: none;
-      border-bottom: 2px solid #33ff33;
-      font-size: 1.2em;
-      padding: 10px;
-    }
-    .buttons {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 20px;
-    }
-    .buttons button {
-      background: black;
-      color: #33ff33;
-      border: 2px solid #33ff33;
-      padding: 10px 20px;
-      cursor: pointer;
-      font-size: 1em;
-      transition: all 0.2s ease;
-    }
-    .buttons button:hover {
-      background: #002200;
-      box-shadow: 0 0 8px #33ff33;
-    }
-    .buttons button.active {
-      background: #003300;
-    }
-    .entry {
-      padding: 10px;
-      border-left: 2px solid #33ff33;
-      margin-bottom: 15px;
-      background: rgba(0, 50, 0, 0.2);
-    }
-    .entry p {
-      margin: 5px 0;
-    }
-    .entry strong {
-      color: #66ff66;
-    }
-    hr {
-      border: none;
-      border-top: 1px dashed #33ff33;
-      margin: 15px 0;
-    }
-    @media screen and (max-width: 600px) {
-      .buttons {
-        flex-direction: column;
-      }
-    }
-  </style>
+<style>
+  body {
+    background-color: #839665;
+    color: #000;
+    font-family: 'Courier New', Courier, monospace;
+    padding: 20px;
+    margin: 0;
+  }
+  .terminal {
+    border: 4px solid #000;
+    padding: 20px;
+    max-width: 800px;
+    margin: 20px auto;
+    background-color: #839665;
+    box-shadow: none;
+  }
+  .input-area {
+    display: flex;
+    margin-bottom: 20px;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .input-area input {
+    flex: 1;
+    min-width: 150px;
+    background: #c7d2a0; /* lighter green for input */
+    color: #000;
+    border: 3px solid #000;
+    font-size: 1.3em;
+    padding: 12px;
+    border-radius: 6px;
+    box-shadow: none;
+  }
+  .input-area input:focus {
+    outline: none;
+    border-color: #3e4f1c;
+    background-color: #d4dfaf;
+  }
+  .buttons {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .buttons button {
+    background: #c7d2a0;
+    color: #000;
+    border: 3px solid #000;
+    padding: 12px 24px;
+    cursor: pointer;
+    font-size: 1.1em;
+    border-radius: 6px;
+    transition: background-color 0.2s ease;
+  }
+  .buttons button:hover {
+    background-color: #aab476;
+  }
+  .buttons button.active {
+    background: #8b9a4c;
+    font-weight: bold;
+  }
+  #output {
+    background: #c7d2a0;
+    color: #000;
+    border: 3px solid #000;
+    padding: 15px;
+    border-radius: 6px;
+    font-size: 1.15em;
+    white-space: pre-wrap;
+    line-height: 1.4em;
+    min-height: 200px;
+  }
+</style>
 </head>
 <body>
   <div class="terminal">
