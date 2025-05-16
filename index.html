@@ -7,342 +7,231 @@
 <style>
   body {
     background-color: #253A4B;
-    color: white;
+    color: #fff;
     font-family: 'Courier New', Courier, monospace;
-    padding: 20px;
-    text-shadow: 0 0 5px rgba(0, 123, 255, 0.7);
+    margin: 0; padding: 20px;
   }
   .terminal {
     max-width: 800px;
-    margin: 0 auto;
-  }
-  .input-area {
-    margin-bottom: 20px;
+    margin: auto;
   }
   input[type="text"] {
     width: 100%;
-    padding: 12px 15px;
     font-size: 1.2em;
+    padding: 10px;
+    background: #1b2a3a;
     border: none;
-    border-radius: 5px;
-    background-color: #1E2B3A;
-    color: white;
-    box-shadow: 0 0 8px #007BFF;
-  }
-  input[type="text"]:focus {
-    outline: none;
-    box-shadow: 0 0 12px #00a0ff;
-  }
-  .accordion {
-    background-color: #1E2B3A;
-    border-radius: 5px;
+    color: #fff;
+    box-sizing: border-box;
     margin-bottom: 10px;
-    box-shadow: 0 0 8px #007BFF;
   }
-  .accordion-header {
-    cursor: pointer;
-    padding: 14px 20px;
+  .category-btns {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  .category-btns button {
+    background: none;
+    border: none;
+    color: #3399ff;
     font-weight: bold;
-    user-select: none;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
-  }
-  .accordion-header:hover {
-    background-color: #1461a0;
-  }
-  .accordion-header.active {
-    background-color: #005fbb;
-  }
-  .accordion-content {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.3s ease;
-    padding-left: 20px;
-    background-color: #1a2737;
-    border-radius: 0 0 5px 5px;
-  }
-  .accordion-content p {
-    margin: 10px 0;
-  }
-  .item {
-    margin: 10px 0;
-  }
-  .item-title {
-    font-weight: 600;
     cursor: pointer;
-    user-select: none;
-    padding: 5px 10px;
+    padding: 8px 16px;
     border-radius: 4px;
-    transition: background-color 0.2s ease;
+    transition: background 0.2s;
   }
-  .item-title:hover {
-    background-color: #0a1a2a;
+  .category-btns button.active,
+  .category-btns button:hover {
+    background: #3399ff;
+    color: #253A4B;
   }
-  .item-content {
-    max-height: 0;
-    overflow: hidden;
-    padding-left: 15px;
-    transition: max-height 0.3s ease;
+  details.dropdown {
+    background: #1b2a3a;
+    border-radius: 4px;
+    margin-bottom: 10px;
   }
-  .item-content p {
-    margin: 5px 0;
+  details[open] > summary {
+    background: #3399ff;
+    color: #253A4B;
+  }
+  summary {
+    cursor: pointer;
+    padding: 10px 15px;
+    font-weight: bold;
+    list-style: none;
+    user-select: none;
+    outline: none;
+  }
+  ul {
+    margin: 0; padding: 0 20px 10px 20px;
+    list-style: none;
+    font-size: 0.95em;
+  }
+  li {
+    padding: 5px 0;
+    cursor: default;
+    border-bottom: 1px solid #2a4159;
+  }
+  li:last-child {
+    border-bottom: none;
+  }
+  li:hover {
+    background: #2a4159;
+  }
+  .description {
+    margin-top: 5px;
+    font-style: italic;
+    color: #a3c4ffcc;
+  }
+  @media (max-width: 500px) {
+    .category-btns button {
+      flex: 1 1 100%;
+      text-align: center;
+    }
   }
 </style>
 </head>
 <body>
 <div class="terminal">
-  <div class="input-area">
-    <input type="text" id="searchInput" placeholder="Search..." oninput="handleSearch()" />
+  <input type="text" id="searchInput" placeholder="Search..." onkeyup="filterData()" />
+  <div class="category-btns">
+    <button class="active" data-category="All" onclick="switchCategory(event)">All</button>
+    <button data-category="Landmarks" onclick="switchCategory(event)">Landmarks</button>
+    <button data-category="Characters" onclick="switchCategory(event)">Characters</button>
+    <button data-category="Citizens" onclick="switchCategory(event)">Citizens</button>
   </div>
-
-  <div id="accordionContainer"></div>
+  <div id="output"></div>
 </div>
-
 <script>
   const data = {
-    All: {
-      Landmarks: [
-        { name: "Nulight (Prabha - Light)", resident: "Jam-Wise", description: "A serene village bathed in perpetual twilight, known for its bioluminescent flora and fauna. The village's centerpiece is the Lumina Tree, whose glowing branches light up the entire area.", symbol: "Firefly" },
-        { name: "Marja’s Eye (Chandra - Moon)", resident: "Hoodie-Jam", description: "A town characterized by its reflective lakes and tranquil atmosphere. The night sky here is always clear, making it a perfect spot for stargazing. The town square features a large, mysterious mirror that locals believe holds the secrets of the moon.", symbol: "Cat" },
-        { name: "Surya Zero (Surya - Sun)", resident: "Prototype Zero", description: "A bustling city that never sleeps, powered by solar energy. The architecture is futuristic, with sleek, reflective surfaces that shimmer in the sunlight. The Sunspire Tower in the city's center is a beacon of innovation and purity.", symbol: "Dog" },
-        { name: "Again (Agni - Fire)", resident: "The Inventor", description: "A vibrant lab city where creativity and energy abound. Flames and sparks can be seen dancing around the various inventions and gadgets created here. The central lab, Ignis Core, is a hub of ceaseless innovation.", symbol: "Fire Salamander" },
-        { name: "Bhalu’s Rest (Dhara - Earth)", resident: "Jamstone", description: "A grounded village nestled among rolling hills and sturdy trees. The people here value strength and stability. Bhalu’s Rest is known for its giant ancient bear statues guarding the entrance.", symbol: "Bear" },
-        { name: "Airpota (Vayu - Wind)", resident: "AirJam", description: "A windy town high atop cliffs, where the air is crisp and the breeze never stops. The town is famous for its swift messengers who travel with the wind’s speed.", symbol: "Swift" },
-        { name: "Apas Blue (Jala - Water)", resident: "Jamwave", description: "A coastal city famous for its deep blue waters and fluid architecture. Its people are adaptable and calm, with a culture that flows like water itself.", symbol: "Dolphin" },
-        { name: "Pratu’s Dawn (Udaya - Dawn)", resident: "Jamstar", description: "A peaceful village where the first light of day breaks beautifully over the horizon. Known for hope and new beginnings, the sunbirds here sing at dawn.", symbol: "Sunbird" }
-      ],
-      Characters: [
-        { name: "Jam-Wise", element: "Prabhasa (Light)", symbol: "Firefly", description: "Represents wisdom and enlightenment." },
-        { name: "Hoodie-Jam", element: "Soma (Moon)", symbol: "Cat", description: "Reflects introspection, emotion, and subtlety." },
-        { name: "Prototype Zero", element: "Surya (Sun)", symbol: "Dog", description: "Symbolizes purity, power, and innocence." },
-        { name: "The Inventor", element: "Anala (Fire)", symbol: "Fire Salamander", description: "Represents creativity, energy, and transformation." },
-        { name: "Jamstone", element: "Dhara (Earth)", symbol: "Bear", description: "Symbolizes stability, strength, and grounding." },
-        { name: "AirJam", element: "Anila (Wind)", symbol: "Swift", description: "Represents freedom, agility, and swiftness." },
-        { name: "Jamwave", element: "Apas (Water)", symbol: "Dolphin", description: "Symbolizes fluidity, adaptability, and depth." },
-        { name: "Jamstar", element: "Pratyusha (Dawn)", symbol: "Sunbird", description: "Represents new beginnings, hope, and brilliance." }
-      ],
-      Citizens: [
-        { id: "000", name: "JAM" },
-        { id: "001", name: "XF" },
-        { id: "002", name: "spoon" },
-        { id: "003", name: "POCARI WET" },
-        { id: "004", name: "toy" },
-        { id: "005", name: "inkboy" },
-        { id: "006", name: "lopu" },
-        { id: "007", name: "JuicyShifu" },
-        { id: "008", name: "Lugiias" },
-        { id: "009", name: "JY" },
-        { id: "010", name: "Clam Shell" },
-        { id: "011", name: "catlaine" },
-        { id: "012", name: "DJ NARU" },
-        { id: "013", name: "Kim Aziz" },
-        { id: "014", name: "FruitKing" },
-        { id: "015", name: "danish3r" },
-        { id: "016", name: "Ericccc" },
-        { id: "017", name: "Avrey" },
-        { id: "018", name: "Mikyuki" },
-        { id: "019", name: "NICHOLAS Torrance" },
-        { id: "020", name: "Battle Mistress" },
-        { id: "021", name: "KYREAUX" },
-        { id: "022", name: "Tae" },
-        { id: "023", name: "Yên" },
-        { id: "024", name: "Bee" },
-        { id: "025", name: "Vlwxys" },
-        { id: "026", name: "Angela" },
-        { id: "027", name: "Pinkie" },
-        { id: "028", name: "Richo" },
-        { id: "029", name: "Joyce" },
-        { id: "030", name: "Chanel" }
-      ]
-    }
+    Landmarks: [
+      { name: "Nulight (Prabha - Light)", resident: "Jam-Wise", description: "Serene village bathed in perpetual twilight, known for its bioluminescent flora and fauna. The village's centerpiece is the Lumina Tree, whose glowing branches light up the entire area.", symbol: "Firefly" },
+      { name: "Marja’s Eye (Chandra - Moon)", resident: "Hoodie-Jam", description: "Town with reflective lakes, tranquil atmosphere, perfect for stargazing.", symbol: "Cat" },
+      { name: "Surya Zero (Surya - Sun)", resident: "Prototype Zero", description: "Futuristic city powered by solar energy, home of Sunspire Tower.", symbol: "Dog" },
+      { name: "Again (Agni - Fire)", resident: "The Inventor", description: "Lab city where creativity and energy abound, center is Ignis Core.", symbol: "Fire Salamander" },
+      { name: "Bhalu’s Rest (Dhara - Earth)", resident: "Jamstone", description: "Village known for its stability and strength, surrounded by mountains.", symbol: "Bear" },
+      { name: "Airpota (Vayu - Wind)", resident: "AirJam", description: "Town characterized by swift winds and open skies.", symbol: "Swift" },
+      { name: "Apas Blue (Jala - Water)", resident: "Jamwave", description: "City known for its flowing rivers and adaptability.", symbol: "Dolphin" },
+      { name: "Pratu’s Dawn (Udaya - Dawn)", resident: "Jamstar", description: "Village representing new beginnings and hope.", symbol: "Sunbird" }
+    ],
+    Characters: [
+      { name: "Jam-Wise", associated: "Prabhasa (Light)", symbol: "Firefly", description: "Represents wisdom and enlightenment." },
+      { name: "Hoodie-Jam", associated: "Soma (Moon)", symbol: "Cat", description: "Reflects introspection and subtlety." },
+      { name: "Prototype Zero", associated: "Surya (Sun)", symbol: "Dog", description: "Symbolizes purity, power, and innocence." },
+      { name: "The Inventor", associated: "Anala (Fire)", symbol: "Fire Salamander", description: "Represents creativity, energy, and transformation." },
+      { name: "Jamstone", associated: "Dhara (Earth)", symbol: "Bear", description: "Symbolizes stability, strength, and grounding." },
+      { name: "AirJam", associated: "Anila (Wind)", symbol: "Swift", description: "Symbolizes freedom and agility." },
+      { name: "Jamwave", associated: "Apas (Water)", symbol: "Dolphin", description: "Symbolizes fluidity and depth." },
+      { name: "Jamstar", associated: "Pratyusha (Dawn)", symbol: "Sunbird", description: "Represents new beginnings and hope." }
+    ],
+    Citizens: [
+      { name: "Pijon Smith", role: "Hive Mind Pigeon", description: "Every pigeon on Jam's Planet combined, with a pink-haired human head and streetwear." },
+      { name: "Spoon", role: "3-year-old Cavoodle", description: "Jam's little dog, super chill and fluffy." },
+      { name: "Elaine", role: "Fiancé", description: "Jam's partner and home anchor." }
+      // Add more citizens if you want
+    ]
   };
 
-  let openItems = new Set();
+  let currentCategory = 'All';
 
-  function createAccordion() {
-    const container = document.getElementById('accordionContainer');
-    container.innerHTML = '';
-
-    for (const category in data.All) {
-      const section = document.createElement('div');
-      section.className = 'accordion';
-
-      const header = document.createElement('div');
-      header.className = 'accordion-header';
-      header.textContent = category;
-      header.onclick = () => {
-        header.classList.toggle('active');
-        const content = header.nextElementSibling;
-        if (content.style.maxHeight) {
-          content.style.maxHeight = null;
-        } else {
-          content.style.maxHeight = content.scrollHeight + "px";
-        }
-      };
-      section.appendChild(header);
-
-      const content = document.createElement('div');
-      content.className = 'accordion-content';
-
-      data.All[category].forEach(item => {
-        const itemDiv = document.createElement('div');
-        itemDiv.className = 'item';
-
-        const title = document.createElement('div');
-        title.className = 'item-title';
-        title.textContent = item.name || item.id || 'Unknown';
-        title.onclick = () => {
-          title.classList.toggle('active');
-          const detail = title.nextElementSibling;
-          if (detail.style.maxHeight) {
-            detail.style.maxHeight = null;
-          } else {
-            detail.style.maxHeight = detail.scrollHeight + "px";
-          }
-        };
-
-        const detail = document.createElement('div');
-        detail.className = 'item-content';
-
-        let detailText = '';
-        if (item.description) detailText += `<p>${item.description}</p>`;
-        if (item.resident) detailText += `<p>Resident: ${item.resident}</p>`;
-        if (item.symbol) detailText += `<p>Symbol: ${item.symbol}</p>`;
-        if (item.element) detailText += `<p>Element: ${item.element}</p>`;
-        if (item.id) detailText += `<p>ID: ${item.id}</p>`;
-
-        detail.innerHTML = detailText;
-
-        itemDiv.appendChild(title);
-        itemDiv.appendChild(detail);
-        content.appendChild(itemDiv);
-      });
-
-      section.appendChild(content);
-      container.appendChild(section);
+  function createItemElement(item, type) {
+    const li = document.createElement('li');
+    let content = `<strong>${item.name}</strong>`;
+    if (type === 'Landmarks') {
+      content += ` — Resident: ${item.resident}<br><span class="description">${item.description}</span>`;
+    } else if (type === 'Characters') {
+      content += ` — Associated: ${item.associated}<br><span class="description">${item.description}</span>`;
+    } else if (type === 'Citizens') {
+      content += ` — Role: ${item.role || 'N/A'}<br><span class="description">${item.description}</span>`;
     }
-  }
-        { name: "Marja’s Eye (Chandra - Moon)", resident: "Hoodie-Jam", description: "A town characterized by its reflective lakes and tranquil atmosphere. The night sky here is always clear, making it a perfect spot for stargazing. The town square features a large, mysterious mirror that locals believe holds the secrets of the moon.", symbol: "Cat" },
-        { name: "Surya Zero (Surya - Sun)", resident: "Prototype Zero", description: "A bustling city that never sleeps, powered by solar energy. The architecture is futuristic, with sleek, reflective surfaces that shimmer in the sunlight. The Sunspire Tower in the city's center is a beacon of innovation and purity.", symbol: "Dog" },
-        { name: "Again (Agni - Fire)", resident: "The Inventor", description: "A vibrant lab city where creativity and energy abound. Flames and sparks can be seen dancing around the various inventions and gadgets created here. The central lab, Ignis Core, is a hub of ceaseless innovation.", symbol: "Fire Salamander" },
-        { name: "Bhalu’s Rest (Dhara - Earth)", resident: "Jamstone", description: "A peaceful village nestled at the foot of great mountains. The earth here is rich and fertile, supporting lush forests and abundant wildlife. The community is known for its strength and grounded nature.", symbol: "Bear" },
-        { name: "Airpota (Vayu - Wind)", resident: "AirJam", description: "A windy town perched on cliffs with endless skies. Residents are nimble and free-spirited, with a culture revolving around flight and speed. Wind chimes and fluttering flags decorate the streets.", symbol: "Swift" },
-        { name: "Apas Blue (Jala - Water)", resident: "Jamwave", description: "A coastal city renowned for its fluid architecture and flowing waterways. The people here are adaptable and deep thinkers, with a rich tradition of water-based art and music.", symbol: "Dolphin" },
-        { name: "Pratu’s Dawn (Udaya - Dawn)", resident: "Jamstar", description: "A village at the edge of dawn, filled with hope and new beginnings. The sunrise here is legendary, inspiring poets and dreamers alike. Its sunbird symbol represents brilliance and renewal.", symbol: "Sunbird" }
-      ],
-      Characters: [
-        { name: "Jam-Wise", element: "Prabhasa (Light)", animal: "Firefly", description: "Represents wisdom and enlightenment." },
-        { name: "Hoodie-Jam", element: "Soma (Moon)", animal: "Cat", description: "Reflects introspection, emotion, and subtlety." },
-        { name: "Prototype Zero", element: "Surya (Sun)", animal: "Dog", description: "Symbolizes purity, power, and innocence." },
-        { name: "The Inventor", element: "Anala (Fire)", animal: "Fire Salamander", description: "Represents creativity, energy, and transformation." },
-        { name: "Jamstone", element: "Dhara (Earth)", animal: "Bear", description: "Symbolizes stability, strength, and grounding." },
-        { name: "AirJam", element: "Anila (Wind)", animal: "Swift", description: "Represents freedom, agility, and swiftness." },
-        { name: "Jamwave", element: "Apas (Water)", animal: "Dolphin", description: "Symbolizes fluidity, adaptability, and depth." },
-        { name: "Jamstar", element: "Pratyusha (Dawn)", animal: "Sunbird", description: "Symbolizes new beginnings, hope, and brilliance." }
-      ],
-      Citizens: [
-        { name: "Pijon Smith", role: "Hive Mind Pigeon", description: "Every pigeon on Jam's Planet, with pink hair, mask, and streetwear style." },
-        { name: "Spoon", role: "Cavoodle Dog", description: "Jamal's loyal 3-year-old cavoodle companion." }
-        // Add more citizens here...
-      ]
-    }
-  };
-
-  const accordionContainer = document.getElementById('accordionContainer');
-  const searchInput = document.getElementById('searchInput');
-
-  function createItemHTML(item) {
-    return `
-      <div class="item">
-        <div class="item-title" onclick="toggleItemContent(this)">
-          ${item.name}
-        </div>
-        <div class="item-content">
-          ${item.resident ? `<p><strong>Resident:</strong> ${item.resident}</p>` : ''}
-          ${item.element ? `<p><strong>Element:</strong> ${item.element}</p>` : ''}
-          ${item.animal ? `<p><strong>Animal:</strong> ${item.animal}</p>` : ''}
-          ${item.role ? `<p><strong>Role:</strong> ${item.role}</p>` : ''}
-          ${item.symbol ? `<p><strong>Symbol:</strong> ${item.symbol}</p>` : ''}
-          <p>${item.description}</p>
-        </div>
-      </div>
-    `;
+    li.innerHTML = content;
+    return li;
   }
 
-  function toggleAccordion(header) {
-    header.classList.toggle('active');
-    const content = header.nextElementSibling;
-    if (content.style.maxHeight) {
-      content.style.maxHeight = null;
+  function renderCategory(category) {
+    const output = document.getElementById('output');
+    output.innerHTML = '';
+
+    if (category === 'All') {
+      for (const cat in data) {
+        const details = document.createElement('details');
+        details.className = 'dropdown';
+        details.open = true;
+        const summary = document.createElement('summary');
+        summary.textContent = cat;
+        details.appendChild(summary);
+
+        const ul = document.createElement('ul');
+        data[cat].forEach(item => {
+          ul.appendChild(createItemElement(item, cat));
+        });
+        details.appendChild(ul);
+        output.appendChild(details);
+      }
     } else {
-      content.style.maxHeight = content.scrollHeight + "px";
-    }
-  }
+      const details = document.createElement('details');
+      details.className = 'dropdown';
+      details.open = true;
+      const summary = document.createElement('summary');
+      summary.textContent = category;
+      details.appendChild(summary);
 
-  function toggleItemContent(title) {
-    title.classList.toggle('active');
-    const content = title.nextElementSibling;
-    if (content.style.maxHeight) {
-      content.style.maxHeight = null;
-    } else {
-      content.style.maxHeight = content.scrollHeight + "px";
-    }
-  }
-
-  function renderAccordion(filteredData) {
-    accordionContainer.innerHTML = '';
-    for (const category in filteredData) {
-      const acc = document.createElement('div');
-      acc.className = 'accordion';
-
-      const header = document.createElement('div');
-      header.className = 'accordion-header';
-      header.textContent = category;
-      header.onclick = () => toggleAccordion(header);
-      acc.appendChild(header);
-
-      const content = document.createElement('div');
-      content.className = 'accordion-content';
-
-      filteredData[category].forEach(item => {
-        const itemDiv = document.createElement('div');
-        itemDiv.innerHTML = createItemHTML(item);
-        content.appendChild(itemDiv.firstElementChild);
+      const ul = document.createElement('ul');
+      data[category].forEach(item => {
+        ul.appendChild(createItemElement(item, category));
       });
-
-      acc.appendChild(content);
-      accordionContainer.appendChild(acc);
+      details.appendChild(ul);
+      output.appendChild(details);
     }
+  }
+
+  function switchCategory(e) {
+    currentCategory = e.target.getAttribute('data-category');
+    document.querySelectorAll('.category-btns button').forEach(btn => btn.classList.remove('active'));
+    e.target.classList.add('active');
+    document.getElementById('searchInput').value = '';
+    renderCategory(currentCategory);
   }
 
   function filterData() {
-    const query = searchInput.value.toLowerCase();
-    if (!query) {
-      renderAccordion(data.All);
+    const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+    const output = document.getElementById('output');
+    output.innerHTML = '';
+
+    if (!searchTerm) {
+      renderCategory(currentCategory);
       return;
     }
-    const filtered = {};
-    for (const category in data.All) {
-      filtered[category] = data.All[category].filter(item => {
-        return Object.values(item).some(val =>
-          val.toLowerCase().includes(query)
+
+    // Search across all data, grouped by category
+    for (const cat in data) {
+      const filteredItems = data[cat].filter(item => {
+        return Object.values(item).some(val => 
+          val && val.toString().toLowerCase().includes(searchTerm)
         );
       });
-      if (filtered[category].length === 0) delete filtered[category];
-    }
-    if (Object.keys(filtered).length === 0) {
-      accordionContainer.innerHTML = '<p>No results found.</p>';
-    } else {
-      renderAccordion(filtered);
+
+      if (filteredItems.length) {
+        const details = document.createElement('details');
+        details.className = 'dropdown';
+        details.open = true;
+        const summary = document.createElement('summary');
+        summary.textContent = cat;
+        details.appendChild(summary);
+
+        const ul = document.createElement('ul');
+        filteredItems.forEach(item => {
+          ul.appendChild(createItemElement(item, cat));
+        });
+        details.appendChild(ul);
+        output.appendChild(details);
+      }
     }
   }
 
-  function handleSearch() {
-    filterData();
-  }
-
-  // Initial render on page load
-  renderAccordion(data.All);
+  // Initial render
+  renderCategory('All');
 </script>
 </body>
 </html>
